@@ -1,0 +1,61 @@
+from django.db import models
+
+
+# Create your models here.
+
+# 交流
+
+class User(models.Model):
+    # 基本信息
+    account_name = models.CharField(max_length=40)  # 账户名(登陆用)
+    password = models.CharField(max_length=40)  # 密码 使用md5 16进制存储
+    nickname = models.CharField(max_length=40)  # 昵称
+    info_visibility = models.IntegerField(default=0)
+
+
+# 聊天会话
+# class Session(models.Model):
+# 通知推送消息
+# class Notification(models.Model):
+# class permissions(models.Model):
+
+# 交流 End
+
+# 信息分享
+
+# 群组
+class Group(models.Model):
+    name = models.CharField(max_length=40)  # 群组名称
+    notice = models.CharField(max_length=240)  # 公告
+    introduction = models.CharField(max_length=240)  # 简介
+
+
+# 关注群组映射
+class UserFollowGroupMapping(models.Model):
+    group = models.ForeignKey("Group", on_delete=models.CASCADE)  # group_id
+    user = models.ForeignKey("User", on_delete=models.CASCADE)  # user_id
+
+
+# 活动
+class Activity(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.CharField(max_length=1000)
+    place = models.CharField(max_length=100)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    like_number = models.IntegerField(default=0)
+
+
+# 参加活动映射
+class UserAttendActivityMapping(models.Model):
+    activity = models.ForeignKey("Activity", on_delete=models.CASCADE)
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
+
+
+# 评论
+class Comment(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE)  # user_id
+    content = models.CharField(max_length=120)
+    time = models.DateTimeField()
+
+# 信息分享 End
