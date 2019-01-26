@@ -31,7 +31,7 @@ def success(data=None):
         'code': 0,
         'data': data
     }
-    # UtilLog.info(response, 'response')
+    # Log.info(response, 'response')
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
@@ -40,5 +40,5 @@ def fail(return_value, msg=''):
         'code': return_value.value,
         'errorMsg': msg
     }
-    # UtilLog.info(response, 'response')
+    # Log.info(response, 'response')
     return HttpResponse(json.dumps(response), content_type="application/json")

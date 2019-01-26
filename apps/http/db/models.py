@@ -26,8 +26,18 @@ class User(models.Model):
 # 群组
 class Group(models.Model):
     name = models.CharField(max_length=40)  # 群组名称
-    notice = models.CharField(max_length=240)  # 公告
+    notice = models.CharField(max_length=240, default='未有公告')  # 公告
     introduction = models.CharField(max_length=240)  # 简介
+    create_time = models.DateTimeField(default=None)
+
+    # to dict for display
+
+    def to_list_dict(self):
+        dict = {
+            'group_id': self.id,
+            'name': self.name
+        }
+        return dict
 
 
 # 关注群组映射
