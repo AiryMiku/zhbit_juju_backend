@@ -113,7 +113,7 @@ def set_admin(request: HttpRequest):
 def invite(request: HttpRequest):
     """
     邀请人员
-        发送通知
+        发送通知(need notification model
     :param request:
     :return:
     """
@@ -143,7 +143,7 @@ def remove_member(request: HttpRequest):
         'require_user_id': ''
     })
     user_id = request.META.get('HTTP_TOKEN', None)
-    # permission check result
+    # permission check result todo
     pr = None
     if pr:
         mapping = models.UserFollowGroupMapping.objects.get(group_id=_param['group_id'],

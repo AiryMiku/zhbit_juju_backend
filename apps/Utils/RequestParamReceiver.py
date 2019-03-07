@@ -11,9 +11,11 @@ from django.http import HttpRequest
 
 def get_request_param(request: HttpRequest, request_key):
     val = None
-    if not val:
+    if val is None:
         val = request.POST.get(request_key, None)
-    if not val:
+        print(val)
+    if val is None:
         val = request.GET.get(request_key, None)
+        print(val)
     return val
 

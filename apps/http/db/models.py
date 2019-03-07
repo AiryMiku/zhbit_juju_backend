@@ -25,6 +25,7 @@ class User(models.Model):
 
 # 群组
 class Group(models.Model):
+    owner_user_id = models.IntegerField(default=0)
     name = models.CharField(max_length=40)  # 群组名称
     notice = models.CharField(max_length=240, default='未有公告')  # 公告
     introduction = models.CharField(max_length=240)  # 简介
@@ -62,10 +63,22 @@ class UserAttendActivityMapping(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)
 
 
+# 活动从属群组映射表
+class ActivityBelongGroupMapping(models.Model):
+    group = models.ForeignKey("Group", on_delete=models.CASCADE)  # group_id
+    activity = models.ForeignKey("Activity", on_delete=models.CASCADE)
+
+
 # 评论
 class Comment(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)  # user_id
     content = models.CharField(max_length=120)
     time = models.DateTimeField()
+
+
+# 评论活动映射表
+class ActivityBelongComment(models.Model):
+    activity = models.ForeignKey("Activity", on_delete=models.CASCADE)
+    comment = models.ForeignKey("Comment", on_delete=models.CASCADE)
 
 # 信息分享 End

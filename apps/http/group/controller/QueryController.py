@@ -14,7 +14,7 @@ from apps.Utils import ReturnResult as rS
 
 def index(request: HttpRequest):
     """
-
+    群组列表查看（全部）
     :param request:
     :return:
     """
@@ -46,7 +46,7 @@ def index(request: HttpRequest):
 
 def member_index(request: HttpRequest):
     """
-
+    查看指定的群组人员
     :param request:
     :return:
     """
@@ -64,6 +64,7 @@ def member_index(request: HttpRequest):
 
     if count == 0:
         rS.success({
+            'count': count,
             'list': None
         })
 
@@ -77,9 +78,67 @@ def member_index(request: HttpRequest):
         data_list.append(var)
 
     rS.success({
+        'count': count,
         'list': data_list
     })
 
 
+def base_info(request: HttpRequest):
+    """
+    群组页面的基础信息
+    :param request:
+    :return:
+    """
+    _param = validate_and_return(request, {
+        'group_id': ''
+    })
+
+    group = models.Group.objects.get(pk=_param['group_id'])
+
+    if group:
+        display_data = dict()
+        display_data['name'] = group.name
+        display_data['notice'] = group.notice
 
 
+def info_activity_index(request: HttpRequest):
+    """
+    群组页面会展示的活动信息
+    :param request: 
+    :return: 
+    """
+    _param = validate_and_return(request, {
+        'group_id': '',
+        'page': '',
+        'size': ''
+    })
+
+    page = _param['page']
+    size = _param['size']
+
+    group = models.Group.objects.get(pk=_param['group_id'])
+
+    activities = models.Activity.objects.filter(group=group)
+    count = activities.count()
+
+    if count == 0:
+        rS.success({
+            'count': count,
+            'list': None
+        })
+
+    page_activities = activities[(page - 1) * size:page * size]
+    data_list = list
+
+    for val in page_activities:
+        var = dict()
+        var['title'] = val.title
+        var['start_time'] = val.start_time
+        mapping = models.UserAttendActivityMapping.objects.filter(activity=val)
+        var['follow_people_num'] = mapping.count()
+        data_list.append(var)
+
+    rS.success({
+        'count': count,
+        'list': data_list
+    })

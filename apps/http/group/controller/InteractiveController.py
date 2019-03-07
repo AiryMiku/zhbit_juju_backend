@@ -46,3 +46,24 @@ def dis_follow(request: HttpRequest):
     :param request:
     :return:
     """
+    _param = validate_and_return(request, {
+        'group_id': '',
+        'require_user_id': ''
+    })
+
+    user = models.User.objects.get(pk=_param['require_user_id'])
+    group = models.Group.objects.get(pk=_param['group_id'])
+
+    if user is None:
+        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有找到用户')
+
+    if group is None:
+        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该群组')
+
+    mapping = models.UserFollowGroupMapping.objects.get(user=user, group=group)
+
+    if mapping:
+        mapping.delete()
+        rS.success()
+    else:
+        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消关注失败')
