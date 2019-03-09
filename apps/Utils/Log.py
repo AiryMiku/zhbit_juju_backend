@@ -10,6 +10,8 @@ import sys
 
 logger_server = logging.getLogger('juju_server')
 
+log_formatter = '{file_path}\nfun_name-> {func}\nline_no -> {line_no}\ntag -> {tag}\nex_msg -> {msg}'
+
 
 class Logger(object):
     @staticmethod
@@ -24,7 +26,16 @@ class Logger(object):
         :param msg: string
         :return:
         """
-        print("Log-" + log_type + "-" + tag + "-" + msg + "\n")
+        _frame = sys._getframe()
+
+        return log_formatter.format(
+            file_path=_frame.f_back.f_back.f_code.co_filename,
+            func=_frame.f_back.f_back.f_code.co_name,
+            line_no=_frame.f_back.f_back.f_lineno,
+            tag=tag,
+            msg=msg
+        )
+        # print("Log-" + log_type + "-" + tag + "-" + msg + "\n")
 
     @classmethod
     def debug(cls, tag, msg):
@@ -46,4 +57,7 @@ class Logger(object):
     def fatal(cls, tag, msg):
         cls.get_logger().fatal(cls.print_log("fatal", tag, msg))
 
+    @classmethod
+    def error(cls, tag, msg):
+        cls.get_logger().error(cls.print_log("error", tag, msg))
 

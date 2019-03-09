@@ -22,7 +22,6 @@ class User(models.Model):
 # 交流 End
 
 # 信息分享
-
 # 群组
 class Group(models.Model):
     owner_user_id = models.IntegerField(default=0)
@@ -69,9 +68,15 @@ class ActivityBelongGroupMapping(models.Model):
     activity = models.ForeignKey("Activity", on_delete=models.CASCADE)
 
 
+# like映射表, 存在便有like，不存在便无
+class ActivityLikeMapping(models.Model):
+    activity = models.ForeignKey("Activity", on_delete=models.CASCADE)
+    user_id = models.IntegerField(default=0)
+
+
 # 评论
 class Comment(models.Model):
-    user = models.ForeignKey("User", on_delete=models.CASCADE)  # user_id
+    user_id = models.IntegerField(default=0)  # user_id
     content = models.CharField(max_length=120)
     time = models.DateTimeField()
 

@@ -10,7 +10,7 @@ from django.http import HttpRequest
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
-
+from apps.http.decorator.LoginCheckDecorator import login_check
 
 def index(request: HttpRequest):
     """
@@ -30,6 +30,7 @@ def index(request: HttpRequest):
     count = groups.count()
     if count == 0:
         rS.success({
+            'count': count,
             'list': None
         })
     page_groups = groups[(page - 1) * size:page * size]
@@ -40,8 +41,26 @@ def index(request: HttpRequest):
         data_list.append(var)
 
     rS.success({
+        'count': count,
         'list': data_list
     })
+
+
+@login_check()
+def index_follow(request: HttpRequest):
+    _param = validate_and_return(request, {
+        'page': '',
+        'size': ''
+    })
+
+    # 假装有个user_id
+    user_id = 1
+
+    page = _param['page']
+    size = _param['size']
+
+    _groups_follow = models.UserFollowGroupMapping.objects.filter(user_id=user_id)
+    # todo 跨表查询
 
 
 def member_index(request: HttpRequest):
@@ -101,7 +120,7 @@ def base_info(request: HttpRequest):
         display_data['notice'] = group.notice
 
 
-def info_activity_index(request: HttpRequest):
+def base_info_activity_index(request: HttpRequest):
     """
     群组页面会展示的活动信息
     :param request: 

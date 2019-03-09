@@ -13,8 +13,10 @@ from apps.http.db import models
 from datetime import datetime
 from apps.Utils import ReturnResult as rS
 from apps.Utils.Log import Logger as Log
+from apps.http.decorator.LoginCheckDecorator import login_check
 
 
+@login_check()
 def create(request: HttpRequest):
     """
     创建群组
@@ -25,6 +27,11 @@ def create(request: HttpRequest):
         'introduction': ''
     })
     _param['create_time'] = datetime.now()
+    user_id = request.META.get('HTTP_TOKEN', None)
+    if not user_id:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '创建群组失败')
+
+    _param['owner_user_id'] = user_id
     cur_group = models.Group.objects.create(**_param)
 
     if cur_group:
@@ -35,6 +42,7 @@ def create(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '创建群组失败')
 
 
+@login_check()
 def delete(request: HttpRequest):
     """
     删除群组
@@ -56,6 +64,7 @@ def delete(request: HttpRequest):
         rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '删除群组失败')
 
 
+@login_check()
 def modify(request: HttpRequest):
     """
     修改群组
@@ -66,6 +75,7 @@ def modify(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
+        'group_id': '',
         'name': '',
         'notice': '',
         'introduction': ''
@@ -77,17 +87,19 @@ def modify(request: HttpRequest):
         Log.debug('GroupController', 'notification send')
 
     user_id = request.META.get('HTTP_TOKEN', None)
-    # permission check result
-    pr = None
+    # permission check result todo
+    pr = True
     if pr:
-        cur_group = models.Group.objects.update(**_param)
-        cur_group.save()
+        _var = _param
+        _var.pop('group_id')
+        models.Group.objects.filter(pk=_param['group_id']).update(**_var)
         rS.success()
     else:
         rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '修改群组失败')
 
 
 # member management
+@login_check()
 def set_admin(request: HttpRequest):
     """
     设置管理员
@@ -110,6 +122,7 @@ def set_admin(request: HttpRequest):
         rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '设置管理员失败')
 
 
+@login_check()
 def invite(request: HttpRequest):
     """
     邀请人员
@@ -123,7 +136,10 @@ def invite(request: HttpRequest):
         'require_user_id': ''
     })
 
-    # send notification
+    # permission check result todo
+    pr = None
+
+    # send notification todo
     send_result = None
     if send_result:
         rS.success()
@@ -131,6 +147,7 @@ def invite(request: HttpRequest):
         rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '邀请失败')
 
 
+@login_check()
 def remove_member(request: HttpRequest):
     """
     删除人员
