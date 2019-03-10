@@ -20,15 +20,18 @@ def validate_and_return(request: HttpRequest, key_dict: dict):
 def _validate(__source, __func, args_dict: dict):
     request_dict = {}
     for key in args_dict:
+
         # todo add rule check
-        # if args_dict[key] is not None:
-        #     # only key has value will add to the dict
         var = __func(__source, key)
         if var is None:
             Log.debug('validate', 'key:'+key+' is None')    # just show
             raise ParamMissingException(key=key, msg='缺少参数%s' % key)
         else:
-            request_dict[key] = var
+            if args_dict[key].lower() == 'int':
+                _var = int(var)
+            else:
+                _var = var
+            request_dict[key] = _var
     return request_dict
 
 

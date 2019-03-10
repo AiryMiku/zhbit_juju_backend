@@ -59,9 +59,9 @@ def delete(request: HttpRequest):
     if pr:
         cur_group = models.Group.objects.get(pk=_param['group_id'])
         cur_group.delete()
-        rS.success()
+        return rS.success()
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '删除群组失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '删除群组失败')
 
 
 @login_check()
@@ -93,9 +93,9 @@ def modify(request: HttpRequest):
         _var = _param
         _var.pop('group_id')
         models.Group.objects.filter(pk=_param['group_id']).update(**_var)
-        rS.success()
+        return rS.success()
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '修改群组失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '修改群组失败')
 
 
 # member management
@@ -114,12 +114,12 @@ def set_admin(request: HttpRequest):
     user_id = request.META.get('HTTP_TOKEN', None)
     owner_id = models.Group.objects.get(pk=_param['group_id'])
     if user_id == owner_id:
-        # make require_user_id as admin
+        # make require_user_id as admin todo
         rq_user_id = _param['require_user_id']
 
-        rS.success()
+        return rS.success()
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '设置管理员失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '设置管理员失败')
 
 
 @login_check()
@@ -142,9 +142,9 @@ def invite(request: HttpRequest):
     # send notification todo
     send_result = None
     if send_result:
-        rS.success()
+        return rS.success()
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '邀请失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '邀请失败')
 
 
 @login_check()
@@ -167,8 +167,8 @@ def remove_member(request: HttpRequest):
                                                             user_id=_param['require_user_id'])
         if mapping is not None:
             mapping.delete()
-            rS.success()
+            return rS.success()
         else:
-            rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '被操作用户不存在')
+            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '被操作用户不存在')
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '缺少权限操作')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '缺少权限操作')

@@ -34,19 +34,19 @@ def leave_comment(request: HttpRequest):
     _comment = models.Comment.objects.create(**_comment_param)
 
     if _comment is None:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '评论失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '评论失败')
 
     _activity = models.Activity.objects.get(pk=_param['activity_id'])
 
     if _activity is None:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该活动')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该活动')
 
     mapping = models.ActivityBelongComment.objects.create(activity=_activity, comment=_comment)
 
     if mapping:
-        rS.success()
+        return rS.success()
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '评论失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '评论失败')
 
 
 def del_comment(request: HttpRequest):
@@ -63,8 +63,9 @@ def del_comment(request: HttpRequest):
     if mapping:
         mapping.delete()
         _comment.delete()
+        return rS.success()
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '删除评论失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '删除评论失败')
 
 
 def like(request: HttpRequest):
@@ -85,9 +86,9 @@ def like(request: HttpRequest):
             _activity.like_number += 1
             _activity.save()
         else:
-            rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '点赞失败')
+            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '点赞失败')
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '点赞失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '点赞失败')
 
 
 def dis_like(request: HttpRequest):
@@ -107,7 +108,8 @@ def dis_like(request: HttpRequest):
         if mapping:
             _activity.like_number -= 1
             _activity.delete()
+            return rS.success()
         else:
-            rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消点赞失败')
+            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消点赞失败')
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消点赞失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消点赞失败')

@@ -27,17 +27,17 @@ def follow(request: HttpRequest):
     group = models.Group.objects.get(pk=_param['group_id'])
 
     if user is None:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有找到用户')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有找到用户')
 
     if group is None:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该群组')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该群组')
 
     mapping = models.UserFollowGroupMapping.objects.create(group=group, user=user)
 
     if mapping:
-        rS.success()
+        return rS.success()
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '关注失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '关注失败')
 
 
 def dis_follow(request: HttpRequest):
@@ -55,15 +55,15 @@ def dis_follow(request: HttpRequest):
     group = models.Group.objects.get(pk=_param['group_id'])
 
     if user is None:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有找到用户')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有找到用户')
 
     if group is None:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该群组')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该群组')
 
     mapping = models.UserFollowGroupMapping.objects.get(user=user, group=group)
 
     if mapping:
         mapping.delete()
-        rS.success()
+        return rS.success()
     else:
-        rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消关注失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消关注失败')

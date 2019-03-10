@@ -12,6 +12,7 @@ from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 from apps.http.decorator.LoginCheckDecorator import login_check
 
+
 def index(request: HttpRequest):
     """
     群组列表查看（全部）
@@ -19,8 +20,8 @@ def index(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'page': '',
-        'size': ''
+        'page': 'int',
+        'size': 'int'
     })
 
     page = _param['page']
@@ -28,19 +29,14 @@ def index(request: HttpRequest):
 
     groups = models.Group.objects.all()
     count = groups.count()
-    if count == 0:
-        rS.success({
-            'count': count,
-            'list': None
-        })
     page_groups = groups[(page - 1) * size:page * size]
 
-    data_list = list
+    data_list = list()
     for val in page_groups:
         var = val.to_list_dict()
         data_list.append(var)
 
-    rS.success({
+    return rS.success({
         'count': count,
         'list': data_list
     })
@@ -48,6 +44,11 @@ def index(request: HttpRequest):
 
 @login_check()
 def index_follow(request: HttpRequest):
+    """
+    查找user follow的group
+    :param request:
+    :return:
+    """
     _param = validate_and_return(request, {
         'page': '',
         'size': ''
@@ -59,8 +60,21 @@ def index_follow(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    _groups_follow = models.UserFollowGroupMapping.objects.filter(user_id=user_id)
-    # todo 跨表查询
+    _groups_followed = models.UserFollowGroupMapping.objects.filter(user_id=user_id)
+    count = _groups_followed.count()
+
+    _groups_followed_page = _groups_followed[(page - 1) * size:page * size]
+
+    data_list = list()
+    for val in _groups_followed_page:
+        _group = models.Group.objects.get(pk=val.group_id)
+        var = _group.to_list_dict()
+        data_list.append(var)
+
+    return rS.success({
+        'count': count,
+        'list': data_list
+    })
 
 
 def member_index(request: HttpRequest):
@@ -81,14 +95,8 @@ def member_index(request: HttpRequest):
     members = models.UserFollowGroupMapping.objects.filter(group_id=_param['group_id'])
     count = members.count()
 
-    if count == 0:
-        rS.success({
-            'count': count,
-            'list': None
-        })
-
     page_members = members[(page - 1) * size:page * size]
-    data_list = list
+    data_list = list()
 
     for val in page_members:
         var = dict()
@@ -96,7 +104,7 @@ def member_index(request: HttpRequest):
         var['nickname'] = val.user.nickname
         data_list.append(var)
 
-    rS.success({
+    return rS.success({
         'count': count,
         'list': data_list
     })
@@ -118,6 +126,7 @@ def base_info(request: HttpRequest):
         display_data = dict()
         display_data['name'] = group.name
         display_data['notice'] = group.notice
+        return rS.success(display_data)
 
 
 def base_info_activity_index(request: HttpRequest):
@@ -140,14 +149,8 @@ def base_info_activity_index(request: HttpRequest):
     activities = models.Activity.objects.filter(group=group)
     count = activities.count()
 
-    if count == 0:
-        rS.success({
-            'count': count,
-            'list': None
-        })
-
     page_activities = activities[(page - 1) * size:page * size]
-    data_list = list
+    data_list = list()
 
     for val in page_activities:
         var = dict()
@@ -157,7 +160,7 @@ def base_info_activity_index(request: HttpRequest):
         var['follow_people_num'] = mapping.count()
         data_list.append(var)
 
-    rS.success({
+    return rS.success({
         'count': count,
         'list': data_list
     })

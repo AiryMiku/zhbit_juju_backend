@@ -33,11 +33,11 @@ class Group(models.Model):
     # to dict for display
 
     def to_list_dict(self):
-        dict = {
+        dict_data = {
             'group_id': self.id,
             'name': self.name
         }
-        return dict
+        return dict_data
 
 
 # 关注群组映射
@@ -54,6 +54,17 @@ class Activity(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     like_number = models.IntegerField(default=0)
+
+    def to_list_dict(self):
+        dict_data = {
+            'activity_id': self.id,
+            'title': self.title,
+            'place': self.place,
+            'start_time': self.start_time,
+            'end_time': self.end_time,
+            'like_number': self.like_number
+        }
+        return dict_data
 
 
 # 参加活动映射
