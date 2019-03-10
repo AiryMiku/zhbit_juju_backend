@@ -55,7 +55,7 @@ def delete(request: HttpRequest):
 
     user_id = request.META.get('HTTP_TOKEN', None)
     # permission check result
-    pr = None
+    pr = 123
     if pr:
         cur_group = models.Group.objects.get(pk=_param['group_id'])
         cur_group.delete()
@@ -64,7 +64,7 @@ def delete(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '删除群组失败')
 
 
-@login_check()
+# @login_check()
 def modify(request: HttpRequest):
     """
     修改群组
@@ -76,13 +76,22 @@ def modify(request: HttpRequest):
     """
     _param = validate_and_return(request, {
         'group_id': '',
-        'name': '',
-        'notice': '',
-        'introduction': ''
+        'name': 'nullable',
+        'notice': 'nullable',
+        'introduction': 'nullable'
     })
 
+    # for k, y in _param.items():
+    #     if y is None:
+    #         _param.pop(k)
+    #
+    for k, y in _param.items():
+        print(k + ' -> ' + y)
+    #
+    # return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, 'test in group modify')
+
     # 编辑公告
-    if _param['notice']:
+    if _param.get('notice', None) is not None:
         # notification
         Log.debug('GroupController', 'notification send')
 
@@ -90,9 +99,9 @@ def modify(request: HttpRequest):
     # permission check result todo
     pr = True
     if pr:
-        _var = _param
-        _var.pop('group_id')
-        models.Group.objects.filter(pk=_param['group_id']).update(**_var)
+        group_id = _param['group_id']
+        _param.pop('group_id')
+        models.Group.objects.filter(pk=group_id).update(**_param)
         return rS.success()
     else:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '修改群组失败')

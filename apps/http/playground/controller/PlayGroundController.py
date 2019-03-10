@@ -15,7 +15,7 @@ from apps.Utils import ReturnResult as rS
 
 def show(request: HttpRequest):
     """
-    展示活动广场的群组活动消息
+    展示活动广场的活动消息
     :param request:
     :return:
     """
@@ -27,18 +27,18 @@ def show(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    groups = models.Group.objects.all()
-    count = groups.count()
-    page_groups = groups[(page - 1) * size:page * size]
+    activities = models.Activity.objects.all()
+    count = activities.count()
+    page_activities = activities[(page - 1) * size:page * size]
 
-    data_list = list
-    for val in page_groups:
+    data_list = list()
+    for val in page_activities:
         var = val.to_list_dict()
         data_list.append(var)
 
+    sorted_list = sorted(data_list, key=lambda x: x['like_number'], reverse=False)  # 降序
 
-
-    rS.success({
+    return rS.success({
         'count': count,
-        'list': data_list
+        'list': sorted_list
     })

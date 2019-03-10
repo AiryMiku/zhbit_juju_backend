@@ -28,12 +28,12 @@ def index(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    groups = models.Group.objects.all()
-    count = groups.count()
-    page_groups = groups[(page - 1) * size:page * size]
+    activities = models.Activity.objects.all()
+    count = activities.count()
+    page_activities = activities[(page - 1) * size:page * size]
 
-    data_list = list
-    for val in page_groups:
+    data_list = list()
+    for val in page_activities:
         var = val.to_list_dict()
         data_list.append(var)
 

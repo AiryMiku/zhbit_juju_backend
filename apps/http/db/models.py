@@ -35,7 +35,11 @@ class Group(models.Model):
     def to_list_dict(self):
         dict_data = {
             'group_id': self.id,
-            'name': self.name
+            'owner_user_id': self.owner_user_id,
+            'name': self.name,
+            'notice': self.notice,
+            'introduction': self.introduction,
+            'create_time': str(self.create_time)
         }
         return dict_data
 

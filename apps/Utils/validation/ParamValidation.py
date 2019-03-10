@@ -21,8 +21,12 @@ def _validate(__source, __func, args_dict: dict):
     request_dict = {}
     for key in args_dict:
 
-        # todo add rule check
         var = __func(__source, key)
+        # todo add rule check
+        if args_dict[key] == 'nullable':
+            if var is None:
+                continue
+
         if var is None:
             Log.debug('validate', 'key:'+key+' is None')    # just show
             raise ParamMissingException(key=key, msg='缺少参数%s' % key)
@@ -32,6 +36,7 @@ def _validate(__source, __func, args_dict: dict):
             else:
                 _var = var
             request_dict[key] = _var
+
     return request_dict
 
 

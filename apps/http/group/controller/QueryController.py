@@ -123,9 +123,7 @@ def base_info(request: HttpRequest):
     group = models.Group.objects.get(pk=_param['group_id'])
 
     if group:
-        display_data = dict()
-        display_data['name'] = group.name
-        display_data['notice'] = group.notice
+        display_data = group.to_list_dict()
         return rS.success(display_data)
 
 
