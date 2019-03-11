@@ -17,7 +17,7 @@
 }
 ```
 
-## 群组
+## 群组（前缀 group/
 * 创建群组 （已测试）
     * path('create/', GroupController.create), 
 * 删除群组（未加入权限控制，测试可以删除
