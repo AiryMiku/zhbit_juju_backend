@@ -17,7 +17,7 @@ class User(models.Model):
 # class Session(models.Model):
 # 通知推送消息
 # class Notification(models.Model):
-# class permissions(models.Model):
+# class Permissions(models.Model):
 
 # 交流 End
 

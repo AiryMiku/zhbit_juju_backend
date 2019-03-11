@@ -32,8 +32,84 @@
 * 移除人员（
     * path('remove_member/', GroupController.remove_member),
 ### Query
-* 查看所有活动（已测试
+* 查看所有群组（已测试
   * path('indexAll/', QueryController.index),
+
+返回Json
+```json
+{
+    "code": 0,
+    "data": {
+        "count": 8,
+        "list": [
+            {
+                "group_id": 7,
+                "owner_user_id": 0,
+                "name": "test",
+                "notice": "未有公告",
+                "introduction": "inc in test",
+                "create_time": "2019-03-07 08:35:59.762750"
+            },
+            {
+                "group_id": 8,
+                "owner_user_id": 0,
+                "name": "test",
+                "notice": "未有公告",
+                "introduction": "inc in test",
+                "create_time": "2019-03-07 08:43:06.604291"
+            },
+            {
+                "group_id": 9,
+                "owner_user_id": 0,
+                "name": "test",
+                "notice": "未有公告",
+                "introduction": "inc in test",
+                "create_time": "2019-03-07 08:45:28.999273"
+            },
+            {
+                "group_id": 10,
+                "owner_user_id": 0,
+                "name": "test",
+                "notice": "未有公告",
+                "introduction": "inc in test",
+                "create_time": "2019-03-07 08:47:43.219607"
+            },
+            {
+                "group_id": 11,
+                "owner_user_id": 0,
+                "name": "test",
+                "notice": "未有公告",
+                "introduction": "inc in test",
+                "create_time": "2019-03-07 16:49:59.232931"
+            },
+            {
+                "group_id": 12,
+                "owner_user_id": 123,
+                "name": "",
+                "notice": "未有公告",
+                "introduction": "",
+                "create_time": "2019-03-08 18:20:38.637201"
+            },
+            {
+                "group_id": 13,
+                "owner_user_id": 123,
+                "name": "Airy is so cool",
+                "notice": "未有公告",
+                "introduction": "Airy intro \bis very long",
+                "create_time": "2019-03-10 15:57:42.780649"
+            },
+            {
+                "group_id": 14,
+                "owner_user_id": 123,
+                "name": "Airy is so cool2",
+                "notice": "未有公告",
+                "introduction": "Airy intro is very long2",
+                "create_time": "2019-03-10 16:00:01.287017"
+            }
+        ]
+    }
+}        
+```
 * 查看关注的群组
     * path('indexFollow', QueryController.index_follow),
 * 查看群组的成员
