@@ -12,6 +12,15 @@ class User(models.Model):
     nickname = models.CharField(max_length=40)  # 昵称
     info_visibility = models.IntegerField(default=0)
 
+    # 拓展信息
+    sex = models.IntegerField(default=0)  # 0 = 女 1 = 男
+    birth = models.DateField()  # 生日
+    phone = models.IntegerField(default=10010)  # 电话号码
+
+    # 隐私
+    enable_searched = models.BooleanField(default=True)  # 是否允许被搜索
+    enable_visited_list = models.IntegerField(default=7)  # 允许被查看的个人信息列表 二进制维护
+
 
 # 聊天会话
 class Chitchat(models.Model):
@@ -26,15 +35,16 @@ class Chitchat(models.Model):
 # 聊天记录
 class ChatRecord(models.Model):
     # 记录信息
-    chatrecord_owner = models.IntegerField(default=0)  # 所属会话 id
+    chatrecord_chitchat_id = models.IntegerField(default=0)  # 所属会话 id
     chatrecord_type = models.IntegerField(default=0)  # 记录类型 0 = 个人会话 1 = 群聊
+    chatrecord_owner = models.IntegerField(default=0)  # 记录来源用户 id
     chatrecord_text = models.CharField(max_length=300)  # 文本
 
 
 # 通知推送消息
 class Notification(models.Model):
-    Notification_type = models.IntegerField(default=0)  # 推送消息的类型
-
+    Notification_type = models.IntegerField(default=0)  # 推送消息的类型 0 =
+    Notification_text = models.CharField(max_length=300)  # 通知信息的文本
 
 # 权限
 # class Permissions(models.Model):
