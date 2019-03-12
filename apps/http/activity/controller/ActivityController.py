@@ -36,7 +36,7 @@ def create(request: HttpRequest):
             mapping = models.ActivityBelongGroupMapping.objects.create(activity=_activity, group=group)
             if mapping:
                 return rS.success({
-                    'activity_id': _activity.id
+                    'id': _activity.id
                 })
             else:
                 return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '创建活动mapping失败')

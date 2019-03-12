@@ -36,7 +36,7 @@ def create(request: HttpRequest):
 
     if cur_group:
         return rS.success({
-            'group_id': cur_group.id
+            'id': cur_group.id
         })
     else:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '创建群组失败')

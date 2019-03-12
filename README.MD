@@ -1,13 +1,14 @@
 # zhbit_juju_backend
 
-# request_key_dict 规定
+# 约定
+### request_key_dict 规定
 ```json
 {
   "[request_param_key]": "validate_rule" 
 }
 ```
 
-# 标准返回格式
+### 标准返回格式
 ```json
 {
   "code": 0,
@@ -16,6 +17,9 @@
   }
 }
 ```
+
+### 一些规范
+* 所有返回的实体信息统称id,详细见apps/db/model.py,减少信息冗余，便于客户端对接（写少点实体
 
 ## 群组（前缀 group/
 * 创建群组 （已测试）

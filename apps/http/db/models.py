@@ -34,7 +34,7 @@ class Group(models.Model):
 
     def to_list_dict(self):
         dict_data = {
-            'group_id': self.id,
+            'id': self.id,
             'owner_user_id': self.owner_user_id,
             'name': self.name,
             'notice': self.notice,
@@ -61,8 +61,9 @@ class Activity(models.Model):
 
     def to_list_dict(self):
         dict_data = {
-            'activity_id': self.id,
+            'id': self.id,
             'title': self.title,
+            'content': self.content,
             'place': self.place,
             'start_time': self.start_time,
             'end_time': self.end_time,
