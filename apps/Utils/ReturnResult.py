@@ -24,7 +24,7 @@ class ReturnResult(Enum):
     # ActivityError 30-50
 
 
-def success(msg='success', data=None):
+def success(data=None, msg='success'):
     if data is None:
         data = {}
     response = {
