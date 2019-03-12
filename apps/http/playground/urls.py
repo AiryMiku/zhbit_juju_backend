@@ -8,9 +8,10 @@
 
 from django.urls import path, include
 
+from apps.http.playground.controller import PlayGroundController
 
 app_name = "playground"
 
 urlpatterns = [
-    # path('')
+    path('show/', PlayGroundController.show)
 ]

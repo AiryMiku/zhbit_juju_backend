@@ -50,8 +50,8 @@ def index_follow(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'page': '',
-        'size': ''
+        'page': 'int',
+        'size': 'int'
     })
 
     # 假装有个user_id
@@ -84,9 +84,9 @@ def member_index(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'group_id': '',
-        'page': '',
-        'size': ''
+        'group_id': 'int',
+        'page': 'int',
+        'size': 'int'
     })
 
     page = _param['page']
@@ -117,7 +117,7 @@ def base_info(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'group_id': ''
+        'group_id': 'int'
     })
 
     group = models.Group.objects.get(pk=_param['group_id'])
@@ -134,9 +134,9 @@ def base_info_activity_index(request: HttpRequest):
     :return: 
     """
     _param = validate_and_return(request, {
-        'group_id': '',
-        'page': '',
-        'size': ''
+        'group_id': 'int',
+        'page': 'int',
+        'size': 'int'
     })
 
     page = _param['page']

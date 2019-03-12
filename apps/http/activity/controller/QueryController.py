@@ -21,8 +21,8 @@ def index(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'page': '',
-        'size': ''
+        'page': 'int',
+        'size': 'int'
     })
 
     page = _param['page']
@@ -51,8 +51,8 @@ def index_attend(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'page': '',
-        'size': ''
+        'page': 'int',
+        'size': 'int'
     })
 
     # 假装有个user_id todo

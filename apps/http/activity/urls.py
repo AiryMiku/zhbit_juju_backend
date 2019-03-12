@@ -7,8 +7,22 @@
 # @Software: PyCharm
 
 from django.urls import path, include
+
+from apps.http.activity.controller import ActivityController, QueryController, InteractiveController
+
 app_name = "activity"
 
 urlpatterns = [
-    # path('')
+    path('create/', ActivityController.create),
+    path('delete/', ActivityController.delete),
+    path('modify/', ActivityController.modify),
+    # Query
+    path('indexAll/', QueryController.index),
+    path('indexAttend/', QueryController.index_attend),
+    path('info/', QueryController.info),
+    # Interactive
+    path('leaveComment/', InteractiveController.leave_comment),
+    path('deleteComment/', InteractiveController.del_comment),
+    path('like/', InteractiveController.like),
+    path('dislike/', InteractiveController.dislike)
 ]

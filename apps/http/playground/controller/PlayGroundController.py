@@ -20,8 +20,8 @@ def show(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'page': '',
-        'size': ''
+        'page': 'int',
+        'size': 'int'
     })
 
     page = _param['page']

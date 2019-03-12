@@ -22,8 +22,8 @@ def search(request: HttpRequest):
     _param = validate_and_return(request, {
         'type': '',  # user group activity
         'key_word': '',
-        'page': '',
-        'size': ''
+        'page': 'int',
+        'size': 'int'
     })
 
     page = _param['page']

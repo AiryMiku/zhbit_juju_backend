@@ -21,6 +21,7 @@ def create(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
+        'group_id': '',
         'title': '',
         'content': '',
         'place': '',
@@ -30,9 +31,17 @@ def create(request: HttpRequest):
     _activity = models.Activity.objects.create(**_param)
 
     if _activity:
-        return rS.success({
-            'activity_id': _activity.id
-        })
+        group = models.Group.objects.get(pk=_param['group_id'])
+        if group:
+            mapping = models.ActivityBelongGroupMapping.objects.create(activity=_activity, group=group)
+            if mapping:
+                return rS.success({
+                    'activity_id': _activity.id
+                })
+            else:
+                return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '创建活动mapping失败')
+        else:
+            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '群组不存在')
     else:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '创建活动失败')
 

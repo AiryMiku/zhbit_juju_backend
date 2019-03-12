@@ -91,7 +91,7 @@ def like(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '点赞失败')
 
 
-def dis_like(request: HttpRequest):
+def dislike(request: HttpRequest):
     """
     点赞功能
     :param request:

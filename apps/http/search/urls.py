@@ -7,8 +7,11 @@
 # @Software: PyCharm
 
 from django.urls import path, include
+
+from apps.http.search.controller import SearchController
+
 app_name = "search"
 
 urlpatterns = [
-    # path('')
+    path('', SearchController.search)
 ]
