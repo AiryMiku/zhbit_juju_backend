@@ -24,11 +24,12 @@ class ReturnResult(Enum):
     # ActivityError 30-50
 
 
-def success(data=None):
+def success(msg='success', data=None):
     if data is None:
         data = {}
     response = {
         'code': 0,
+        'msg': msg,
         'data': data
     }
     # Log.info(response, 'response')
@@ -38,7 +39,7 @@ def success(data=None):
 def fail(return_value, msg=''):
     response = {
         'code': return_value.value,
-        'errorMsg': msg
+        'msg': msg
     }
     # Log.info(response, 'response')
     return HttpResponse(json.dumps(response), content_type="application/json")
