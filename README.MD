@@ -21,6 +21,9 @@
 ### 一些规范
 * 所有返回的实体信息统称id,详细见apps/db/model.py,减少信息冗余，便于客户端对接（写少点实体
 
+## 已知bug懒得修
+* 查询没有的东西会直接boom（迟点再修
+
 ## 群组（前缀 group/
 * 创建群组 （已测试）
     * path('create/', GroupController.create), 
