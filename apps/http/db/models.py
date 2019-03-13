@@ -14,9 +14,29 @@ class User(models.Model):
 
 
 # 聊天会话
-# class Session(models.Model):
+class Chitchat(models.Model):
+    # 会话主要信息
+    chitchat_name = models.CharField(max_length=30)  # 会话名称
+    chitchat_type = models.IntegerField(default=-1)  # 会话类别 0 = 个人会话 1 = 群聊
+    chitchat_owner = models.CharField(max_length=40)  # 会话归属 个人会话 记录两个人的id 群聊 记录所属群组的id
+    # 群聊信息
+    chitchat_manager = models.CharField(max_length=200)  # 群管理员的id列表
+
+
+# 聊天记录
+class ChatRecord(models.Model):
+    # 记录信息
+    chatrecord_owner = models.IntegerField(default=0)  # 所属会话 id
+    chatrecord_type = models.IntegerField(default=0)  # 记录类型 0 = 个人会话 1 = 群聊
+    chatrecord_text = models.CharField(max_length=300)  # 文本
+
+
 # 通知推送消息
-# class Notification(models.Model):
+class Notification(models.Model):
+    Notification_type = models.IntegerField(default=0)  # 推送消息的类型
+
+
+# 权限
 # class Permissions(models.Model):
 
 # 交流 End
