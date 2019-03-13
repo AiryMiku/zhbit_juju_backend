@@ -1,6 +1,11 @@
 # zhbit_juju_backend
 
 # 约定
+### 分支
+* master
+* dev_airy
+* tph
+
 ### request_key_dict 规定
 ```json
 {
