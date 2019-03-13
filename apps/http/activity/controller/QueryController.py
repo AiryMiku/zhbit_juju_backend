@@ -34,7 +34,9 @@ def index(request: HttpRequest):
 
     data_list = list()
     for val in page_activities:
+        group_name = models.ActivityBelongGroupMapping.objects.get(activity=val).group.name
         var = val.to_list_dict()
+        var['group_name'] = group_name
         data_list.append(var)
 
     return rS.success({
@@ -95,3 +97,35 @@ def info(request: HttpRequest):
     else:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '活动不存在')
 
+
+def index_comment(request: HttpRequest):
+    """
+    活动留下的评论
+    :param request:
+    :return:
+    """
+    _param = validate_and_return(request, {
+        'activity_id': '',
+        'page': 'int',
+        'size': 'int'
+    })
+
+    page = _param['page']
+    size = _param['size']
+
+    _comment_act = models.ActivityBelongComment.objects.filter(activity_id=_param['activity_id'])
+    count = _comment_act
+
+    _act_comment_page = _comment_act[(page - 1) * size:page * size]
+
+    data_list = list()
+    for val in _act_comment_page:
+        _user = models.User.objects.get(pk=val.user_id)
+        var = val.to_list_dict()
+        var['user_nickname'] = _user.nickname
+        data_list.append(var)
+
+    return rS.success({
+        'count': count,
+        'list': data_list
+    })

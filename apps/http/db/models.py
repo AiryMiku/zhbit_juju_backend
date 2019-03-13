@@ -116,6 +116,15 @@ class Comment(models.Model):
     content = models.CharField(max_length=120)
     time = models.DateTimeField()
 
+    def to_list_dict(self):
+        dict_data = {
+            'id': self.id,
+            'user_id': self.user_id,
+            'content': self.content,
+            'time': self.time
+        }
+        return dict_data
+
 
 # 评论活动映射表
 class ActivityBelongComment(models.Model):
