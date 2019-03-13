@@ -36,7 +36,6 @@ class Chitchat(models.Model):
 class ChatRecord(models.Model):
     # 记录信息
     chatrecord_chitchat_id = models.IntegerField(default=0)  # 所属会话 id
-    chatrecord_type = models.IntegerField(default=0)  # 记录类型 0 = 个人会话 1 = 群聊
     chatrecord_owner = models.IntegerField(default=0)  # 记录来源用户 id
     chatrecord_text = models.CharField(max_length=300)  # 文本
 
@@ -46,8 +45,13 @@ class Notification(models.Model):
     Notification_type = models.IntegerField(default=0)  # 推送消息的类型 0 =
     Notification_text = models.CharField(max_length=300)  # 通知信息的文本
 
-# 权限
-# class Permissions(models.Model):
+# 权限 想用二进制来存储并且识别权限 明晚在写
+class Permissions(models.Model):
+    # 权限列表
+    # 群组
+    enable_modifu_group_infomation = models.BooleanField(default=False)  # 修改群组信息的权限
+    enable_modify_notice = models.BooleanField(default=False)  # 修改公告的权限
+    enable_build_group_chat =  models.BooleanField(default=False)  # 创建群聊的权限
 
 # 交流 End
 
