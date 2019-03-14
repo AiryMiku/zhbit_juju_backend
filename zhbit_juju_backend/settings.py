@@ -25,7 +25,10 @@ SECRET_KEY = '*cajmpp=8kjlytoy#2z&1i8m2&8=8-&6wkjy^t@qr-9=g=-!__'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    '10.0.2.2'
+]
 
 
 # Application definition
