@@ -17,7 +17,7 @@ class User(models.Model):
     birth = models.DateField()  # 生日
     phone = models.IntegerField(default=10010)  # 电话号码
 
-    # 隐私
+    # 隐私 private
     enable_searched = models.BooleanField(default=True)  # 是否允许被搜索
     enable_visited_list = models.IntegerField(default=7)  # 允许被查看的个人信息列表 二进制维护
 
@@ -45,13 +45,14 @@ class Notification(models.Model):
     Notification_type = models.IntegerField(default=0)  # 推送消息的类型 0 =
     Notification_text = models.CharField(max_length=300)  # 通知信息的文本
 
+
 # 权限 想用二进制来存储并且识别权限 明晚在写
 class Permissions(models.Model):
     # 权限列表
+    role = models.IntegerField(default=0)  # 权限组角色
     # 群组
-    enable_modifu_group_infomation = models.BooleanField(default=False)  # 修改群组信息的权限
-    enable_modify_notice = models.BooleanField(default=False)  # 修改公告的权限
-    enable_build_group_chat =  models.BooleanField(default=False)  # 创建群聊的权限
+    enable_build_group_chat = models.BooleanField(default=False)  # 创建群聊的权限
+    enable_modify_group = models.BooleanField(default=False)  # 修改群组信息的权限
 
 # 交流 End
 
@@ -80,9 +81,9 @@ class Group(models.Model):
 
 # 关注群组映射
 class UserFollowGroupMapping(models.Model):
-    group = models.ForeignKey("Group", on_delete=models.CASCADE)  # group_id
-    user = models.ForeignKey("User", on_delete=models.CASCADE)  # user_id
-
+    group = models.ForeignKey("Group", on_delete=models.CASCADE)  # group_obj change to id??? 待定
+    user = models.ForeignKey("User", on_delete=models.CASCADE)  # user_obj
+    role = models.IntegerField(default=0)  # user_role_in_group
 
 # 活动
 class Activity(models.Model):
