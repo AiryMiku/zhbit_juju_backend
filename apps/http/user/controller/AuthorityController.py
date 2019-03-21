@@ -1,15 +1,22 @@
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
+from enum import  Enum
 
 
-def get_role(user_id, group_id):
+class GroupPermission(Enum):
+    modify_group_information = 'modify_group_information'
+    modify_group_controller_list = 'modify_group_controller_list'
+    delete_group = 'delete_group'
+
+
+class ChitChatPermission(Enum):
+    modify_ChitChat_information = 'modify_chitchat_information'
+
+
+def check_enable_or_not(user_id, group_id,permission_type):
     obj = models.UserFollowGroupMapping.objects.get(user=user_id, group=group_id)
-    return obj.role
-
-
-def enable_modify_group(user,group):
-    role_ = get_role(user.id, group.id)
-    obj = models.Permissions.objects.get(role=role_)
-    return obj['enable_modify_group']
-
+    if obj is None:
+        print('mapping not exists')
+    permission = models.Permissions.objects.get(role=obj.role)
+    return permission[permission_type]
