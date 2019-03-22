@@ -20,3 +20,7 @@ def check_enable_or_not(user_id, group_id,permission_type):
         print('mapping not exists')
     permission = models.Permissions.objects.get(role=obj.role)
     return permission[permission_type]
+
+
+def app(self):
+    pass
