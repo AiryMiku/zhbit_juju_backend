@@ -144,18 +144,14 @@ def base_info_activity_index(request: HttpRequest):
 
     group = models.Group.objects.get(pk=_param['group_id'])
 
-    activities = models.Activity.objects.filter(group=group)
+    activities = models.ActivityBelongGroupMapping.objects.filter(group=group)
     count = activities.count()
 
     page_activities = activities[(page - 1) * size:page * size]
     data_list = list()
 
     for val in page_activities:
-        var = dict()
-        var['title'] = val.title
-        var['start_time'] = val.start_time
-        mapping = models.UserAttendActivityMapping.objects.filter(activity=val)
-        var['follow_people_num'] = mapping.count()
+        var = val.activity.to_list_dict()
         data_list.append(var)
 
     return rS.success({
