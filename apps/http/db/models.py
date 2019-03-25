@@ -1,4 +1,5 @@
 from django.db import models
+from apps.Utils.DateTimeUtil import format_datetime_to_str
 
 
 # Create your models here.
@@ -59,7 +60,7 @@ class Group(models.Model):
             'name': self.name,
             'notice': self.notice,
             'introduction': self.introduction,
-            'create_time': self.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
+            'create_time': format_datetime_to_str(self.create_time)
         }
         return dict_data
 
@@ -85,8 +86,8 @@ class Activity(models.Model):
             'title': self.title,
             'content': self.content,
             'place': self.place,
-            'start_time': self.start_time.strftime("%Y年%m月%d日 %H:%M:%S"),
-            'end_time': self.end_time.strftime("%Y年%m月%d日 %H:%M:%S"),
+            'start_time': format_datetime_to_str(self.start_time),
+            'end_time': format_datetime_to_str(self.end_time),
             'like_number': self.like_number
         }
         return dict_data
@@ -121,7 +122,7 @@ class Comment(models.Model):
             'id': self.id,
             'user_id': self.user_id,
             'content': self.content,
-            'time': self.time.strftime("%Y年%m月%d日 %H:%M:%S")
+            'time': format_datetime_to_str(self.time)
         }
         return dict_data
 
