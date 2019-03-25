@@ -1,7 +1,7 @@
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
-from enum import  Enum
+from enum import Enum
 
 
 class GroupPermission(Enum):
@@ -10,8 +10,8 @@ class GroupPermission(Enum):
     delete_group = 'delete_group'
 
 
-class ChitChatPermission(Enum):
-    modify_ChitChat_information = 'modify_chitchat_information'
+class MessagePermission(Enum):
+    send_group_message = 'send_group_message'
 
 
 def check_enable_or_not(user_id, group_id,permission_type):
