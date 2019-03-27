@@ -91,9 +91,13 @@ def info(request: HttpRequest):
     })
 
     _activity = models.Activity.objects.get(pk=_param['activity_id'])
+    _group = models.ActivityBelongGroupMapping.objects.filter(activity=_activity).first().group
 
-    if _activity:
-        return rS.success(_activity.to_list_dict())
+    display_data = _activity.to_list_dict()
+    display_data['group_name'] = _group.name
+
+    if _activity and _group:
+        return rS.success(display_data)
     else:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '活动不存在')
 

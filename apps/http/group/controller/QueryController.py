@@ -10,7 +10,7 @@ from django.http import HttpRequest
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
-from apps.http.decorator.LoginCheckDecorator import login_check
+
 
 
 def index(request: HttpRequest):
@@ -42,7 +42,6 @@ def index(request: HttpRequest):
     })
 
 
-@login_check()
 def index_follow(request: HttpRequest):
     """
     查找user follow的group
@@ -50,12 +49,13 @@ def index_follow(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
+        'user_id': 'int',
         'page': 'int',
         'size': 'int'
     })
 
     # 假装有个user_id
-    user_id = 1
+    user_id = _param['user_id']
 
     page = _param['page']
     size = _param['size']
