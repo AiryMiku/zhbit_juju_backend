@@ -11,18 +11,28 @@ class User(models.Model):
     password = models.CharField(max_length=40)  # 密码 使用md5 16进制存储
     nickname = models.CharField(max_length=40)  # 昵称
 
-    token = models.CharField(max_length=100,default = "0")  #
+    access_token = models.CharField(max_length=100,default = "0")  #
 
     # 拓展信息
-    sex = models.IntegerField(default=0)  # -1 = 未编辑 0 = 女 1 = 男
-    birth = models.DateField()  # 生日
+    sex = models.IntegerField(default=-1)  # -1 = 未编辑 0 = 女 1 = 男
+    birth = models.DateField(default='')  # 生日
     phone = models.IntegerField(default=10010)  # 电话号码
-    status = models.CharField(max_length=100)  # 签名
+    status = models.CharField(max_length=100,default='')  # 签名
 
     # 隐私
     enable_searched = models.BooleanField(default=True)  # 是否允许被搜索
     enable_visited_list = models.IntegerField(default=15)  # 允许被查看的拓展信息列表 二进制维护
 
+    def to_list_dict(self):
+        dict_data={
+            'id':self.id,
+            'nickname':self.nickname,
+            'sex':self.sex,
+            'birth':self.birth,
+            'phone': self.phone,
+            'status': self.status,
+        }
+        return dict_data
 
 # 信息
 class Message(models.Model):

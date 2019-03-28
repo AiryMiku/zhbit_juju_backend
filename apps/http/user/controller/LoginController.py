@@ -37,13 +37,8 @@ def login(request: HttpRequest):
         'token': token,
     })
 
-def get_token_by_id(request: HttpRequest):
-    _param = validate_and_return(request,{
-        'token':'',
-    })
-    obj = models.User.objects.get(token=_param['token'])
+def get_id_by_token(access_token):
+    obj = models.User.objects.get(access_token=access_token)
     if obj is None:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此用户已在别处登陆')
-    return rS.success({
-        'user_id': obj.id
-    })
+        return -1
+    return obj.id

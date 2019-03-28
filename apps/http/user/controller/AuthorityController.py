@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 from enum import Enum
-
+from apps.http.user.controller import  LoginController
 
 class GroupPermission(Enum):
     modify_group_information = 'modify_group_information'
@@ -18,10 +18,11 @@ class MessagePermission(Enum):
 
 def is_owner(request: HttpRequest):
     _param = validate_and_return(request, {
-        'user_id': '',
+        'access_token': '',
         'group_id': '',
     })
-    obj = models.UserFollowGroupMapping.objects.get(user=_param['user_id'], group=_param['group_id'])
+    user_id = LoginController.get_id_by_token(_param['access_token'])
+    obj = models.UserFollowGroupMapping.objects.get(user=user_id, group=_param['group_id'])
     ans = (obj.role == 1)
     return rS.success({
         'is_admin': ans
@@ -30,10 +31,11 @@ def is_owner(request: HttpRequest):
 
 def is_admin(request: HttpRequest):
     _param = validate_and_return(request, {
-        'user_id': '',
+        'access_token': '',
         'group_id': '',
     })
-    obj = models.UserFollowGroupMapping.objects.get(user=_param['user_id'], group=_param['group_id'])
+    user_id = LoginController.get_id_by_token(_param['access_token'])
+    obj = models.UserFollowGroupMapping.objects.get(user=user_id, group=_param['group_id'])
     ans = ((obj.role == 1) | (obj.role == 2))
     return rS.success({
         'is_admin': ans
