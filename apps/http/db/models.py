@@ -11,6 +11,8 @@ class User(models.Model):
     password = models.CharField(max_length=40)  # 密码 使用md5 16进制存储
     nickname = models.CharField(max_length=40)  # 昵称
 
+    token = models.CharField(max_length=100,default = "0")  #
+
     # 拓展信息
     sex = models.IntegerField(default=0)  # -1 = 未编辑 0 = 女 1 = 男
     birth = models.DateField()  # 生日
@@ -83,7 +85,7 @@ class Group(models.Model):
 # 关注群组映射
 class UserFollowGroupMapping(models.Model):
     group = models.ForeignKey("Group", on_delete=models.CASCADE)
-    user = models.ForeignKey("User", on_delete=models.CASCADE)  # user_obj
+    user = models.ForeignKey("User", on_delete=models.CASCADE)  # user_id
     role = models.IntegerField(default=0)  # user_role_in_group
 
 

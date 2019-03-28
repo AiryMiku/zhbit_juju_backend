@@ -11,7 +11,9 @@ def register(request: HttpRequest):
         'nickname': '',
     })
     # 验证 后续补
-
+    exist = models.User.objects.get(account_name = _param['account_name'])
+    if exist is not None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'用户名已存在')
     _user = models.User.objects.create(**_param)
 
     if _user:
