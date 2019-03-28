@@ -1,19 +1,18 @@
 from django.db import models
 
-
 # Create your models here.
 
 # 交流
+
 
 class User(models.Model):
     # 基本信息
     account_name = models.CharField(max_length=40)  # 账户名(登陆用)
     password = models.CharField(max_length=40)  # 密码 使用md5 16进制存储
     nickname = models.CharField(max_length=40)  # 昵称
-    info_visibility = models.IntegerField(default=0)
 
     # 拓展信息
-    sex = models.IntegerField(default=0)  # 0 = 女 1 = 男
+    sex = models.IntegerField(default=0)  # -1 = 未编辑 0 = 女 1 = 男
     birth = models.DateField()  # 生日
     phone = models.IntegerField(default=10010)  # 电话号码
     status = models.CharField(max_length=100)  # 签名
@@ -32,7 +31,7 @@ class Message(models.Model):
 
 
 # 关注关系 不论谁关注谁，每两个人只有一行数据
-class Follow(models.Model):
+class FollowMapping(models.Model):
     user_left_id = models.IntegerField(default=0)  # 左用户的id
     user_right_id = models.IntegerField(default=0)  # 右用户的id
     left_to_right = models.BooleanField(default=False)  # 左是否关注右
@@ -52,7 +51,7 @@ class Permissions(models.Model):
     # 群组
     modify_group = models.BooleanField(default=False)  # 修改群组信息的权限
     set_admin = models.BooleanField(default=False)  # 设置管理员
-    send_group_message = models.BooleanField(default=False)  # send message to group member
+    send_group_message = models.BooleanField(default=False)  # 发送信息给群体成员
 
 # 交流 End
 
