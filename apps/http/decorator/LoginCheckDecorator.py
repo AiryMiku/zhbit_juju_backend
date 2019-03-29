@@ -27,8 +27,8 @@ def login_check(*args, **kwargs):
         def returned_wrapper(request: HttpRequest, *args, **kwargs):
             try:
                 # 判断是否需要登录
-                if _login_required(request):
-                    return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "用户未登录")
+                # if _login_required(request):
+                #     return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "用户未登录")
 
                 # # 是否需要权限认证
                 # if pl != '':
