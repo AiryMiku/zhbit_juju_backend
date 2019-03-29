@@ -87,7 +87,8 @@ def info(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'activity_id': ''
+        'activity_id': '',
+        'user_id': 'nullable'
     })
 
     _activity = models.Activity.objects.get(pk=_param['activity_id'])
@@ -95,6 +96,13 @@ def info(request: HttpRequest):
 
     display_data = _activity.to_list_dict()
     display_data['group_name'] = _group.name
+    display_data['is_follow'] = False
+
+    if _param.get('user_id', None) is not None:
+        display_data['is_follow'] = False
+        mapping = models.UserAttendActivityMapping.objects.filter(user_id=_param['user_id'], activity=_activity)
+        if mapping.count != 0:
+            display_data['is_follow'] = True
 
     if _activity and _group:
         return rS.success(display_data)
@@ -117,15 +125,15 @@ def index_comment(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    _comment_act = models.ActivityBelongComment.objects.filter(activity_id=_param['activity_id'])
-    count = _comment_act
+    _comment_act = models.ActivityBelongComment.objects.filter(activity_id=_param['activity_id']).all()
+    count = _comment_act.count()
 
     _act_comment_page = _comment_act[(page - 1) * size:page * size]
 
     data_list = list()
     for val in _act_comment_page:
-        _user = models.User.objects.get(pk=val.user_id)
-        var = val.to_list_dict()
+        _user = models.User.objects.get(pk=val.comment.user_id)
+        var = val.comment.to_list_dict()
         var['user_nickname'] = _user.nickname
         data_list.append(var)
 
