@@ -37,8 +37,3 @@ def login(request: HttpRequest):
         'token': token,
     })
 
-def get_id_by_token(access_token):
-    obj = models.User.objects.get(access_token=access_token)
-    if obj is None:
-        return -1
-    return obj.id

@@ -65,6 +65,14 @@ class Permissions(models.Model):
     set_admin = models.BooleanField(default=False)  # 设置管理员
     send_group_message = models.BooleanField(default=False)  # 发送信息给群体成员
 
+    def to_list_dict(self):
+        dict_data={
+            'modify_group':self.modify_group,
+            'set_admin':self.set_admin,
+            'send_group_message':self.send_group_message,
+        }
+        return dict_data
+
 # 交流 End
 
 # 信息分享

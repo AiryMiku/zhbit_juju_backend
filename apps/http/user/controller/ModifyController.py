@@ -8,11 +8,11 @@ from django.http import HttpRequest
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
-from apps.http.user.controller import LoginController
+from apps.http.user.controller import UtilsController
 from apps.http.decorator.LoginCheckDecorator import login_check
 
 
-@login_check()
+# @login_check()
 def modify_password(request: HttpRequest):
     _param = validate_and_return(request,{
         'access_token':'',
@@ -20,7 +20,7 @@ def modify_password(request: HttpRequest):
         'new_password':'',
         'confirm_password':'',
     })
-    user_id = LoginController.get_id_by_token(_param['access_token'])
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
     if user_id == -1:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登陆')
 
@@ -37,20 +37,8 @@ def modify_password(request: HttpRequest):
 
     return rS.ReturnResult()
 
-@login_check()
-def get_information(request: HttpRequest):
-    _param = validate_and_return(request,{
-        'access_token':'',
-    })
-    user_id = LoginController.get_id_by_token(_param['access_token'])
-    if user_id == -1:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登陆')
 
-    obj = models.User.objects.get(pk=user_id)
-
-    return rS.success(obj.to_list_dict())
-
-@login_check()
+# @login_check()
 def modify_information(request: HttpRequest):
     _param = validate_and_return(request,{
         'access_token':'',
@@ -61,13 +49,14 @@ def modify_information(request: HttpRequest):
         'status':'',
     })
 
-    user_id = LoginController.get_id_by_token(_param['access_token'])
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
     if user_id == -1:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登陆')
 
     models.User.objects.filter(pk=user_id).update(**_param)
 
     return rS.success()
+
 
 
 
