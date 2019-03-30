@@ -23,7 +23,7 @@ urlpatterns = [
     path('is_admin/', AuthorityController.is_admin),
     path('is_owner/', AuthorityController.is_owner),
     path('follow/', FollowController.follow),
-    path('follow_user/',FollowController.dis_follow),
+    path('dis_follow/',FollowController.dis_follow),
     path('is_follow/',FollowController.is_follow),
     path('modify_enable_searched/',ModifyController.modify_enable_searched),
     path('modify_enable_visited_list/',ModifyController.modify_enable_visited_list),

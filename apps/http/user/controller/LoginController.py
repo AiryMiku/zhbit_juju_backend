@@ -14,26 +14,31 @@ from apps.Utils.Log import Logger as Log
 import hashlib
 import os
 
+
 def login(request: HttpRequest):
     _param = validate_and_return(request,{
-        'account_name':'',
+        'account_name': '',
         'password': '',
     })
 
-    obj = models.User.objects.get(account_name=_param['account_name'])
+    queryset = models.User.objects.filter(account_name=_param['account_name'])
+    obj = None
+    for k in queryset:
+        obj = k
+        break
     if obj is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'该用户不存在')
-
 
     if _param['password'] != obj.password:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'密码不正确')
 
-    token = hashlib.sha1(os.urandom(24)).hexdigest()
+    access_token = hashlib.sha1(os.urandom(24)).hexdigest()
 
-    obj.token = token
+    obj.access_token = access_token
     obj.save()
 
     return rS.success({
-        'token': token,
+        'access_token': access_token,
+        'user_id': obj.id,
     })
 
