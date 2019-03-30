@@ -11,6 +11,7 @@ from apps.Utils import ReturnResult as rS
 from apps.http.user.controller import UtilsController
 from apps.http.decorator.LoginCheckDecorator import login_check
 
+
 # @login_check()
 def follow(request: HttpRequest):
     _param = validate_and_return(request,{
@@ -51,7 +52,7 @@ def follow(request: HttpRequest):
 
 
 # @login_check()
-def follow_user(request: HttpRequest):
+def dis_follow(request: HttpRequest):
     _param = validate_and_return(request,{
         'access_token':'',
         'user_id':'',
@@ -73,20 +74,10 @@ def follow_user(request: HttpRequest):
         if obj.save():
             return rS.success()
         else:
-            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'关注失败')
+            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'取消关注失败')
     else:
-        if p == 0:
-            rs = models.FollowMapping.objects.create(user_right_id=a_id,user_left_id=b_id,left_to_right=True,right_to_left=False)
-            if rs:
-                return rS.success()
-            else:
-                return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'关注失败')
-        else:
-            rs = models.FollowMapping.objects.create(user_right_id=a_id,user_left_id=b_id,left_to_right=False,right_to_left=True)
-            if rs:
-                return rS.success()
-            else:
-                return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'关注失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'没有关注此人')
+
 
 # @login_check()
 def is_follow(request: HttpRequest):

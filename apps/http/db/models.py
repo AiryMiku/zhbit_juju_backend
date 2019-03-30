@@ -34,6 +34,7 @@ class User(models.Model):
         }
         return dict_data
 
+
 # 信息
 class Message(models.Model):
     message_type = models.IntegerField(default=0)  # 0 = 群体信息  1 = 个人信息
