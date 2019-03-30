@@ -259,4 +259,4 @@ Temporary Items
 .apdisk
 
 
-/apps/http/db/migrations/0001_initial.py
+/apps/http/**/0001_initial.py
