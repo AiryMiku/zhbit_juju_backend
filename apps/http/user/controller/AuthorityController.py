@@ -6,6 +6,7 @@ from apps.Utils import ReturnResult as rS
 from enum import Enum
 from apps.http.user.controller import  UtilsController
 
+
 class GroupPermission(Enum):
     modify_group_information = 'modify_group_information'
     modify_group_controller_list = 'modify_group_controller_list'
@@ -22,7 +23,15 @@ def is_owner(request: HttpRequest):
         'group_id': '',
     })
     user_id = UtilsController.get_id_by_token(_param['access_token'])
-    obj = models.UserFollowGroupMapping.objects.get(user=user_id, group=_param['group_id'])
+    if user_id == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登陆')
+    queryset = models.UserFollowGroupMapping.objects.filter(user=user_id, group=_param['group_id'])
+    obj = None
+    for k in queryset:
+        obj = k
+        break
+    if obj is None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '该用户不在此群组')
     ans = (obj.role == 1)
     return rS.success({
         'is_admin': ans
@@ -35,7 +44,13 @@ def is_admin(request: HttpRequest):
         'group_id': '',
     })
     user_id = UtilsController.get_id_by_token(_param['access_token'])
-    obj = models.UserFollowGroupMapping.objects.get(user=user_id, group=_param['group_id'])
+    queryset = models.UserFollowGroupMapping.objects.filter(user=user_id, group=_param['group_id'])
+    obj = None
+    for k in queryset:
+        obj = k
+        break
+    if obj is None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '该用户不在此群组')
     ans = ((obj.role == 1) | (obj.role == 2))
     return rS.success({
         'is_admin': ans
@@ -43,9 +58,14 @@ def is_admin(request: HttpRequest):
 
 
 def check_enable(user_id, group_id, permission_type):
-    obj = models.UserFollowGroupMapping.objects.get(user=user_id, group=group_id)
+    queryset = models.UserFollowGroupMapping.objects.filter(user=user_id, group=group_id)
+    obj = None
+    for k in queryset:
+        obj = k
+        break
     if obj is None:
         print('mapping not exists')
+        return False
     permission = models.Permissions.objects.get(role=obj.role)
     _ = permission.to_list_dict()
     return _[permission_type]

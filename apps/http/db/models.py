@@ -12,11 +12,11 @@ class User(models.Model):
     password = models.CharField(max_length=40)  # 密码 使用md5 16进制存储
     nickname = models.CharField(max_length=40)  # 昵称
 
-    access_token = models.CharField(max_length=100,default = "0")  #
+    access_token = models.CharField(max_length=100, default="0")  #
 
     # 拓展信息
     sex = models.IntegerField(default=-1)  # -1 = 未编辑 0 = 女 1 = 男
-    birth = models.DateField(default='')  # 生日
+    birth = models.DateTimeField(auto_now=True)  # 生日
     phone = models.IntegerField(default=10010)  # 电话号码
     status = models.CharField(max_length=100,default='')  # 签名
 
@@ -29,7 +29,7 @@ class User(models.Model):
             'id':self.id,
             'nickname':self.nickname,
             'sex':self.sex,
-            'birth':self.birth,
+            'birth':format_datetime_to_str(self.birth),
             'phone': self.phone,
             'status': self.status,
         }
@@ -50,6 +50,13 @@ class FollowMapping(models.Model):
     user_right_id = models.IntegerField(default=0)  # 右用户的id
     left_to_right = models.BooleanField(default=False)  # 左是否关注右
     right_to_left = models.BooleanField(default=False)  # the same
+    def to_list_dict(self):
+        dict_data={
+            'user_left_id': self.user_left_id,
+            'user_right_id': self.user_right_id,
+            'left_to_right': self.left_to_right,
+            'right_to_left': self.right_to_left,
+        }
 
 
 # 通知推送消息

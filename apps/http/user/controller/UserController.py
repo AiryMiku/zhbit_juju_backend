@@ -23,8 +23,13 @@ def get_information(request: HttpRequest):
     if user_id == -1:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登陆')
 
-    obj = models.User.objects.get(pk=user_id)
-
+    queryset = models.User.objects.filter(pk=user_id)
+    obj = None
+    for k in queryset:
+        obj = k
+        break
+    if obj is None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'用户不存在')
     return rS.success(obj.to_list_dict())
 
 
@@ -37,7 +42,13 @@ def get_information_by_id(request: HttpRequest):
     a_id = UtilsController.get_id_by_token(_param['access_token'])
     if a_id == -1:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登陆')
-    obj = models.User.objects.get(pk=_param['user_id'])
+    queryset = models.User.objects.filter(pk=_param['user_id'])
+    obj = None
+    for k in queryset:
+        obj = k
+        break
+    if obj is None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '用户不存在')
     _ = obj.to_list_dict()
     return rS.success(_)
 

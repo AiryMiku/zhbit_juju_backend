@@ -24,7 +24,13 @@ def modify_password(request: HttpRequest):
     if user_id == -1:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登陆')
 
-    obj = models.User.objects.get(pk=user_id)
+    queryset = models.User.objects.filter(pk=user_id)
+    obj = None
+    for k in queryset:
+        obj = k
+        break
+    if obj is None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,"该用户不存在")
     pwd = obj.password
     if _param['password'] != pwd:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '密码错误')
@@ -80,7 +86,7 @@ def modify_enable_visited_list(request: HttpRequest):
     for k, v in list_dict:
         enable_visited_list = enable_visited_list << 1 | v
 
-    obj = models.User.objects.get(pk=user_id)
+    obj = models.User.objects.filter(pk=user_id)
     obj.enable_visited_list = enable_visited_list
     if obj.save():
         return rS.success()
@@ -98,13 +104,15 @@ def modify_enable_searched(request: HttpRequest):
     if user_id == -1:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登陆')
 
-    obj = models.User.objects.get(pk=user_id)
-
+    queryset = models.User.objects.filter(pk=user_id)
+    obj = None
+    for k in queryset:
+        obj = k
+    if obj is None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '用户不存在')
     obj.enable_searched = _param['enable_searched']
-    if obj.save():
-        return rS.success()
-    else:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'修改失败')
+    obj.save()
+    return rS.success()
 
 
 

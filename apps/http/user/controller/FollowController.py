@@ -23,31 +23,39 @@ def follow(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登陆')
     p = 0
     b_id = _param['user_id']
-    if a_id < b_id:
+    if int(a_id) > int(b_id):
         a_id,b_id = b_id,a_id
         p = -1
-    obj = models.FollowMapping.objects.get(user_left_id=a_id,user_right_id=b_id)
-    if obj:
+    queryset = models.FollowMapping.objects.filter(user_left_id=a_id).filter(user_right_id=b_id)
+    obj = None
+    for k in queryset:
+        obj = k
+        break
+    print(obj)
+    if obj is not None:
+        print(obj.to_list_dict())
         if p == 0:
             obj.left_to_right = True
         else:
             obj.right_to_left = True
-        if obj.save():
-            return rS.success()
-        else:
-            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'关注失败')
+        obj.save()
+        return rS.success()
     else:
         if p == 0:
-            rs = models.FollowMapping.objects.create(user_right_id=a_id,user_left_id=b_id,left_to_right=True,right_to_left=False)
+            rs = models.FollowMapping.objects.create(user_left_id=a_id,user_right_id=b_id,left_to_right=True,right_to_left=False)
+            print(str(a_id) + '关注了' + str(b_id))
             if rs:
                 return rS.success()
             else:
+                print("111")
                 return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'关注失败')
         else:
-            rs = models.FollowMapping.objects.create(user_right_id=a_id,user_left_id=b_id,left_to_right=False,right_to_left=True)
+            rs = models.FollowMapping.objects.create(user_left_id=a_id,user_right_id=b_id,left_to_right=False,right_to_left=True)
+            print(str(b_id) + '关注了' + str(a_id))
             if rs:
                 return rS.success()
             else:
+                print("222")
                 return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'关注失败')
 
 
@@ -62,21 +70,27 @@ def dis_follow(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登陆')
     p = 0
     b_id = _param['user_id']
-    if a_id < b_id:
+    if int(a_id) > int(b_id):
         a_id,b_id = b_id,a_id
         p = -1
-    obj = models.FollowMapping.objects.get(user_left_id=a_id,user_right_id=b_id)
+    print(a_id)
+    print(b_id)
+    queryset = models.FollowMapping.objects.filter(user_left_id=a_id,user_right_id=b_id)
+    obj = None
+    for k in queryset:
+        obj = k
+        break
+    print(obj.to_list_dict())
     if obj:
         if p == 0:
             obj.left_to_right = False
         else:
             obj.right_to_left = False
-        if obj.save():
-            return rS.success()
-        else:
-            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'取消关注失败')
+        print(obj.to_list_dict())
+        obj.save()
+        return rS.success()
     else:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'没有关注此人')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'关系不存在')
 
 
 # @login_check()
@@ -90,11 +104,19 @@ def is_follow(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登陆')
     b_id = _param['user_id']
     p = 0
-    if a_id > b_id:
+    if int(a_id) > int(b_id):
         a_id,b_id = b_id,a_id
         p = -1
-    obj = models.FollowMapping.objects.get(user_left_id=a_id,user_right_id=b_id)
+    print(a_id)
+    print(b_id)
+    queryset = models.FollowMapping.objects.filter(user_left_id=a_id).filter(user_right_id=b_id)
+    print(queryset)
+    obj = None
+    for k in queryset:
+        obj = k
+        break
     if obj is None:
+        print('关系不存在')
         return rS.success({
             'is_follow':False,
         })

@@ -17,11 +17,15 @@ import os
 
 def login(request: HttpRequest):
     _param = validate_and_return(request,{
-        'account_name':'',
+        'account_name': '',
         'password': '',
     })
 
-    obj = models.User.objects.get(account_name=_param['account_name'])
+    queryset = models.User.objects.filter(account_name=_param['account_name'])
+    obj = None
+    for k in queryset:
+        obj = k
+        break
     if obj is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'该用户不存在')
 
@@ -34,7 +38,7 @@ def login(request: HttpRequest):
     obj.save()
 
     return rS.success({
-        'token': access_token,
+        'access_token': access_token,
         'user_id': obj.id,
     })
 
