@@ -32,7 +32,7 @@ def modify_password(request: HttpRequest):
     if obj is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,"该用户不存在")
     pwd = obj.password
-    if _param['password'] != pwd:
+    if _param['ex_password'] != pwd:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '密码错误')
 
     if _param['new_password'] != _param['confirm_password']:
@@ -41,7 +41,7 @@ def modify_password(request: HttpRequest):
     obj.password = _param['new_password']
     obj.save()
 
-    return rS.ReturnResult()
+    return rS.success()
 
 
 # @login_check()
@@ -77,21 +77,26 @@ def modify_enable_visited_list(request: HttpRequest):
 
     enable_visited_list = 0
     list_dict = {
-        'sex':_param['sex'],
-        'birth':_param['birth'],
-        'phone':_param['phone'],
-        'status':_param['status'],
+        'sex': _param['sex'],
+        'birth': _param['birth'],
+        'phone': _param['phone'],
+        'status': _param['status'],
     }
 
-    for k, v in list_dict:
-        enable_visited_list = enable_visited_list << 1 | v
+    for v in list_dict:
+        print(v)
+        enable_visited_list = enable_visited_list << 1 | int(list_dict[v])
 
-    obj = models.User.objects.filter(pk=user_id)
+    queryset = models.User.objects.filter(pk=user_id)
+    obj = None
+    for k in queryset:
+        obj = k
+        break
+    if obj is None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此用户不存在')
     obj.enable_visited_list = enable_visited_list
-    if obj.save():
-        return rS.success()
-    else:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '修改失败')
+    obj.save()
+    return rS.success()
 
 
 def modify_enable_searched(request: HttpRequest):
