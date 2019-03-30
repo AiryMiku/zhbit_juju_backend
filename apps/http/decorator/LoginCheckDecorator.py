@@ -14,7 +14,7 @@ from apps.Utils.Log import Logger as Log
 from apps.Utils.validation.ParamValidation import ParamMissingException
 
 
-def login_check(*args, **kwargs):
+def request_check(*args, **kwargs):
     """
 
     :return:

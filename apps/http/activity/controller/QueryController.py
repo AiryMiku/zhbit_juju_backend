@@ -11,9 +11,10 @@ from django.http import HttpRequest
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
-from apps.http.decorator.LoginCheckDecorator import login_check
+from apps.http.decorator.LoginCheckDecorator import request_check
 
 
+@request_check()
 def index(request: HttpRequest):
     """
     返回所有的Act
@@ -28,7 +29,7 @@ def index(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    activities = models.Activity.objects.all()
+    activities = models.Activity.objects.all().order_by('-id')
     count = activities.count()
     page_activities = activities[(page - 1) * size:page * size]
 
@@ -45,7 +46,7 @@ def index(request: HttpRequest):
     })
 
 
-@login_check()
+@request_check()
 def index_attend(request: HttpRequest):
     """
     返回用户参加的活动列表
@@ -53,17 +54,16 @@ def index_attend(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
+        'user_id': '',
         'page': 'int',
         'size': 'int'
     })
 
-    # 假装有个user_id todo
-    user_id = 1
-
+    user_id = _param['user_id']
     page = _param['page']
     size = _param['size']
 
-    _act_attended = models.UserAttendActivityMapping.objects.filter(user_id=user_id)
+    _act_attended = models.UserAttendActivityMapping.objects.filter(user_id=user_id).order_by('-id')
     count = _act_attended.count()
 
     _act_attended_page = _act_attended[(page - 1) * size:page * size]
@@ -87,8 +87,7 @@ def info(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'activity_id': '',
-        'user_id': 'nullable'
+        'activity_id': ''
     })
 
     _activity = models.Activity.objects.get(pk=_param['activity_id'])
@@ -96,13 +95,6 @@ def info(request: HttpRequest):
 
     display_data = _activity.to_list_dict()
     display_data['group_name'] = _group.name
-    display_data['is_follow'] = False
-
-    if _param.get('user_id', None) is not None:
-        display_data['is_follow'] = False
-        mapping = models.UserAttendActivityMapping.objects.filter(user_id=_param['user_id'], activity=_activity)
-        if mapping.count != 0:
-            display_data['is_follow'] = True
 
     if _activity and _group:
         return rS.success(display_data)
@@ -125,7 +117,7 @@ def index_comment(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    _comment_act = models.ActivityBelongComment.objects.filter(activity_id=_param['activity_id']).all()
+    _comment_act = models.ActivityBelongComment.objects.filter(activity_id=_param['activity_id']).all().order_by('-id')
     count = _comment_act.count()
 
     _act_comment_page = _comment_act[(page - 1) * size:page * size]

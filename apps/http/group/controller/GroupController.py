@@ -13,10 +13,10 @@ from apps.http.db import models
 from datetime import datetime
 from apps.Utils import ReturnResult as rS
 from apps.Utils.Log import Logger as Log
-from apps.http.decorator.LoginCheckDecorator import login_check
+from apps.http.decorator.LoginCheckDecorator import request_check
 
 
-@login_check()
+@request_check()
 def create(request: HttpRequest):
     """
     创建群组
@@ -42,7 +42,7 @@ def create(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '创建群组失败')
 
 
-@login_check()
+@request_check()
 def delete(request: HttpRequest):
     """
     删除群组
@@ -65,7 +65,7 @@ def delete(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '删除群组失败')
 
 
-# @login_check()
+# @request_check()
 def modify(request: HttpRequest):
     """
     修改群组
@@ -109,7 +109,7 @@ def modify(request: HttpRequest):
 
 
 # member management
-@login_check()
+@request_check()
 def set_admin(request: HttpRequest):
     """
     设置管理员
@@ -132,7 +132,7 @@ def set_admin(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '设置管理员失败')
 
 
-@login_check()
+@request_check()
 def invite(request: HttpRequest):
     """
     邀请人员
@@ -157,7 +157,7 @@ def invite(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '邀请失败')
 
 
-@login_check()
+@request_check()
 def remove_member(request: HttpRequest):
     """
     删除人员
