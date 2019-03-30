@@ -1,48 +1,85 @@
 from django.db import models
 from apps.Utils.DateTimeUtil import format_datetime_to_str
 
-
 # Create your models here.
 
 # 交流
+
 
 class User(models.Model):
     # 基本信息
     account_name = models.CharField(max_length=40)  # 账户名(登陆用)
     password = models.CharField(max_length=40)  # 密码 使用md5 16进制存储
     nickname = models.CharField(max_length=40)  # 昵称
-    info_visibility = models.IntegerField(default=0)
+
+    access_token = models.CharField(max_length=100,default = "0")  #
+
+    # 拓展信息
+    sex = models.IntegerField(default=-1)  # -1 = 未编辑 0 = 女 1 = 男
+    birth = models.DateField(default='')  # 生日
+    phone = models.IntegerField(default=10010)  # 电话号码
+    status = models.CharField(max_length=100,default='')  # 签名
+
+    # 隐私
+    enable_searched = models.BooleanField(default=True)  # 是否允许被搜索
+    enable_visited_list = models.IntegerField(default=15)  # 允许被查看的拓展信息列表 二进制维护
+
+    def to_list_dict(self):
+        dict_data={
+            'id':self.id,
+            'nickname':self.nickname,
+            'sex':self.sex,
+            'birth':self.birth,
+            'phone': self.phone,
+            'status': self.status,
+        }
+        return dict_data
 
 
-# 聊天会话
-class Chitchat(models.Model):
-    # 会话主要信息
-    chitchat_name = models.CharField(max_length=30)  # 会话名称
-    chitchat_type = models.IntegerField(default=-1)  # 会话类别 0 = 个人会话 1 = 群聊
-    chitchat_owner = models.CharField(max_length=40)  # 会话归属 个人会话 记录两个人的id 群聊 记录所属群组的id
-    # 群聊信息
-    chitchat_manager = models.CharField(max_length=200)  # 群管理员的id列表
+# 信息
+class Message(models.Model):
+    message_type = models.IntegerField(default=0)  # 0 = 群体信息  1 = 个人信息
+    from_id = models.IntegerField(default=0)  # 根据type的类型 id 为 群组id or 用户id
+    to_id = models.IntegerField(default=0)  # 如果type = 0 则 to_id = 0 否则为对应用户的id
+    context = models.CharField(max_length=140)  # 信息文本
 
 
-# 聊天记录
-class ChatRecord(models.Model):
-    # 记录信息
-    chatrecord_owner = models.IntegerField(default=0)  # 所属会话 id
-    chatrecord_type = models.IntegerField(default=0)  # 记录类型 0 = 个人会话 1 = 群聊
-    chatrecord_text = models.CharField(max_length=300)  # 文本
+# 关注关系 不论谁关注谁，每两个人只有一行数据
+class FollowMapping(models.Model):
+    user_left_id = models.IntegerField(default=0)  # 左用户的id
+    user_right_id = models.IntegerField(default=0)  # 右用户的id
+    left_to_right = models.BooleanField(default=False)  # 左是否关注右
+    right_to_left = models.BooleanField(default=False)  # the same
 
 
 # 通知推送消息
 class Notification(models.Model):
-    Notification_type = models.IntegerField(default=0)  # 推送消息的类型
+    Notification_type = models.IntegerField(default=0)  # 推送消息的类型 0 = 群组成员变动 1 = 活动更改 2 = 被关注
+    Notification_text = models.CharField(max_length=200)  # 通知信息的文本
 
 
 # 权限
-# class Permissions(models.Model):
+class Permissions(models.Model):
+    # 权限列表
+    role = models.IntegerField(default=0)  # 权限组角色 1 = 群主 2 = 管理员 3 = 普通用户
+    # 群组
+    modify_group = models.BooleanField(default=False)  # 修改群组信息的权限
+    set_admin = models.BooleanField(default=False)  # 设置管理员
+    send_group_message = models.BooleanField(default=False)  # 发送信息给群体成员
+
+    def to_list_dict(self):
+        dict_data={
+            'modify_group':self.modify_group,
+            'set_admin':self.set_admin,
+            'send_group_message':self.send_group_message,
+        }
+        return dict_data
 
 # 交流 End
 
 # 信息分享
+
+
 # 群组
 class Group(models.Model):
     owner_user_id = models.IntegerField(default=0)
@@ -67,8 +104,9 @@ class Group(models.Model):
 
 # 关注群组映射
 class UserFollowGroupMapping(models.Model):
-    group = models.ForeignKey("Group", on_delete=models.CASCADE)  # group_id
+    group = models.ForeignKey("Group", on_delete=models.CASCADE)
     user = models.ForeignKey("User", on_delete=models.CASCADE)  # user_id
+    role = models.IntegerField(default=0)  # user_role_in_group
 
 
 # 活动
