@@ -50,7 +50,8 @@ def delete(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'group_id': ''
+        'group_id': '',
+        'access_token': ''
     })
 
     user_id = request.META.get('HTTP_TOKEN', None)

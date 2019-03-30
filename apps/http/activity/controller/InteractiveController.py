@@ -26,7 +26,8 @@ def leave_comment(request: HttpRequest):
     })
 
     # Todo 糖糖写get_id_by_token()
-    user_id = 0
+    user_id = _param['require_user_id']
+        # user_id request.META.get('HTTP_TOKEN', None)
     _comment_param = dict()
     _comment_param['user_id'] = user_id
     _comment_param['content'] = _param['content']
@@ -107,9 +108,55 @@ def dislike(request: HttpRequest):
         mapping = models.ActivityLikeMapping.objects.get(activity=_activity, user_id=_param['require_user_id'])
         if mapping:
             _activity.like_number -= 1
-            _activity.delete()
+            _activity.save()
+            mapping.delete()
             return rS.success()
         else:
             return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消点赞失败')
     else:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消点赞失败')
+
+
+def follow(request: HttpRequest):
+    """
+    关注活动
+    :param request:
+    :return:
+    """
+    _param = validate_and_return(request, {
+        'activity_id': '',
+        'require_user_id': ''
+    })
+
+    _activity = models.Activity.objects.get(pk=_param['activity_id'])
+    if _activity:
+        mapping = models.UserAttendActivityMapping.objects.create(activity=_activity, user_id=_param['require_user_id'])
+        if mapping:
+            return rS.success()
+        else:
+            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '关注失败')
+    else:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '关注失败')
+
+
+def dis_follow(request: HttpRequest):
+    """
+    取消关注活动
+    :param request:
+    :return:
+    """
+    _param = validate_and_return(request, {
+        'activity_id': '',
+        'require_user_id': ''
+    })
+
+    _activity = models.Activity.objects.get(pk=_param['activity_id'])
+    if _activity:
+        mapping = models.UserAttendActivityMapping.get(activity=_activity, user_id=_param['require_user_id'])
+        if mapping:
+            mapping.delete()
+            return rS.success()
+        else:
+            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消关注失败')
+    else:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消关注失败')

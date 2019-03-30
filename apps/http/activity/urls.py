@@ -20,9 +20,12 @@ urlpatterns = [
     path('indexAll/', QueryController.index),
     path('indexAttend/', QueryController.index_attend),
     path('info/', QueryController.info),
+    path('indexComment/', QueryController.index_comment),
     # Interactive
     path('leaveComment/', InteractiveController.leave_comment),
     path('deleteComment/', InteractiveController.del_comment),
     path('like/', InteractiveController.like),
-    path('dislike/', InteractiveController.dislike)
+    path('dislike/', InteractiveController.dislike),
+    path('follow/', InteractiveController.follow),
+    path('disFollow/', InteractiveController.dis_follow)
 ]

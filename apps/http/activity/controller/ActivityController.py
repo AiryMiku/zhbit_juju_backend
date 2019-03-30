@@ -28,10 +28,13 @@ def create(request: HttpRequest):
         'start_time': '',
         'end_time': '',
     })
+
+    group_id = _param['group_id']
+    _param.pop('group_id')
     _activity = models.Activity.objects.create(**_param)
 
     if _activity:
-        group = models.Group.objects.get(pk=_param['group_id'])
+        group = models.Group.objects.get(pk=group_id)
         if group:
             mapping = models.ActivityBelongGroupMapping.objects.create(activity=_activity, group=group)
             if mapping:
@@ -77,11 +80,11 @@ def modify(request: HttpRequest):
     """
     _param = validate_and_return(request, {
         'activity_id': '',
-        'title': '',
-        'content': '',
-        'place': '',
-        'start_time': '',
-        'end_time': '',
+        'title': 'nullable',
+        'content': 'nullable',
+        'place': 'nullable',
+        'start_time': 'nullable',
+        'end_time': 'nullable',
     })
 
     # permission check todo

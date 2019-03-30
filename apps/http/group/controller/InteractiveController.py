@@ -10,8 +10,10 @@ from django.http import HttpRequest
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
+from apps.http.decorator.LoginCheckDecorator import login_check
 
 
+# @login_check()
 def follow(request: HttpRequest):
     """
     关注
@@ -40,6 +42,7 @@ def follow(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '关注失败')
 
 
+# @login_check()
 def dis_follow(request: HttpRequest):
     """
     取消关注
