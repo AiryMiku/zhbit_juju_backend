@@ -4,7 +4,6 @@ from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 
 
-
 def register(request: HttpRequest):
     _param = validate_and_return(request, {
         'account_name': '',
