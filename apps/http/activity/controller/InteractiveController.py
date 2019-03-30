@@ -160,3 +160,33 @@ def dis_follow(request: HttpRequest):
             return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消关注失败')
     else:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消关注失败')
+
+
+def is_follow(request: HttpRequest):
+    """
+    是否关注
+    :param request:
+    :return:
+    """
+    _param = validate_and_return(request, {
+        'activity_id': '',
+        'require_user_id': ''
+    })
+
+    user = models.User.objects.get(pk=_param['require_user_id'])
+    activity = models.Activity.objects.get(pk=_param['group_id'])
+
+    if user is None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有找到用户')
+
+    if activity is None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该活动')
+
+    mapping = models.UserAttendActivityMapping.objects.get(user=user, activity=activity)
+
+    data = dict()
+    data['is_follow'] = False
+    if mapping.count() != 0:
+        data['is_follow'] = True
+
+    return rS.success(data)
