@@ -54,7 +54,7 @@ def index_attend(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'user_id': '',
+        'user_id': 'int',
         'page': 'int',
         'size': 'int'
     })
