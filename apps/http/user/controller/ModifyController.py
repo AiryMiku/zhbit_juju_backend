@@ -9,7 +9,7 @@ from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 from apps.http.user.controller import UtilsController
-from apps.http.decorator.LoginCheckDecorator import login_check
+from apps.http.decorator.LoginCheckDecorator import request_check
 
 
 # @login_check()

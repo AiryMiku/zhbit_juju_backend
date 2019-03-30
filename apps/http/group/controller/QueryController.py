@@ -10,9 +10,10 @@ from django.http import HttpRequest
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
+from apps.http.decorator.LoginCheckDecorator import request_check
 
 
-
+@request_check()
 def index(request: HttpRequest):
     """
     群组列表查看（全部）
@@ -27,7 +28,7 @@ def index(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    groups = models.Group.objects.all()
+    groups = models.Group.objects.all().order_by('-id')
     count = groups.count()
     page_groups = groups[(page - 1) * size:page * size]
 
@@ -42,6 +43,7 @@ def index(request: HttpRequest):
     })
 
 
+@request_check()
 def index_follow(request: HttpRequest):
     """
     查找user follow的group
@@ -60,7 +62,7 @@ def index_follow(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    _groups_followed = models.UserFollowGroupMapping.objects.filter(user_id=user_id)
+    _groups_followed = models.UserFollowGroupMapping.objects.filter(user_id=user_id).order_by('-id')
     count = _groups_followed.count()
 
     _groups_followed_page = _groups_followed[(page - 1) * size:page * size]
@@ -144,7 +146,7 @@ def base_info_activity_index(request: HttpRequest):
 
     group = models.Group.objects.get(pk=_param['group_id'])
 
-    activities = models.ActivityBelongGroupMapping.objects.filter(group=group)
+    activities = models.ActivityBelongGroupMapping.objects.filter(group=group).order_by('-id')
     count = activities.count()
 
     page_activities = activities[(page - 1) * size:page * size]

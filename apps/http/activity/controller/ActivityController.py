@@ -10,10 +10,10 @@ from django.http import HttpRequest
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
-from apps.http.decorator.LoginCheckDecorator import login_check
+from apps.http.decorator.LoginCheckDecorator import request_check
 
 
-@login_check()
+@request_check()
 def create(request: HttpRequest):
     """
     创建（发布）活动
@@ -49,7 +49,7 @@ def create(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '创建活动失败')
 
 
-@login_check()
+@request_check()
 def delete(request: HttpRequest):
     """
     删除活动
@@ -71,7 +71,7 @@ def delete(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '删除活动失败')
 
 
-@login_check()
+@request_check()
 def modify(request: HttpRequest):
     """
     修改活动
