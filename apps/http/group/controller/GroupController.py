@@ -14,9 +14,10 @@ from datetime import datetime
 from apps.Utils import ReturnResult as rS
 from apps.Utils.Log import Logger as Log
 from apps.http.decorator.LoginCheckDecorator import request_check
+from apps.http.user.controller.UtilsController import get_id_by_token
 
 
-@request_check()
+# @request_check()
 def create(request: HttpRequest):
     """
     创建群组
@@ -27,11 +28,8 @@ def create(request: HttpRequest):
         'introduction': ''
     })
     _param['create_time'] = datetime.now()
-    user_id = request.META.get('HTTP_TOKEN', None)
-    if not user_id:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '创建群组失败')
 
-    _param['owner_user_id'] = user_id
+    _param['owner_user_id'] = 1
     cur_group = models.Group.objects.create(**_param)
 
     if cur_group:

@@ -13,5 +13,7 @@ from apps.http.search.controller import SearchController
 app_name = "search"
 
 urlpatterns = [
-    path('', SearchController.search)
+    path('activity/', SearchController.search_activity),
+    path('group/', SearchController.search_group),
+    path('user/', SearchController.search_user),
 ]

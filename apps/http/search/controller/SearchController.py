@@ -12,15 +12,13 @@ from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 
 
-def search(request: HttpRequest):
+def search_activity(request: HttpRequest):
     """
     搜索
-        根据type
     :param request:
     :return:
     """
     _param = validate_and_return(request, {
-        'type': '',  # user group activity
         'key_word': '',
         'page': 'int',
         'size': 'int'
@@ -29,22 +27,67 @@ def search(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    if _param['type'] is None:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '搜索未指定type')
+    search_results = models.Activity.objects.filter(title__contains=_param['key_word'])
+    count = search_results.count()
+    page_search_results = search_results[(page - 1) * size:page * size]
 
-    search_results = None
+    data_list = list()
+    for val in page_search_results:
+        var = val.to_list_dict()
+        data_list.append(var)
 
-    if _param['type'] == 'activity':
-        search_results = models.Activity.objects.filter(title__contains=_param['key_word'])
-    elif _param['type'] == 'user':
-        search_results = models.User.objects.filter(nickname__contains=_param['key_word'])
-    elif _param['type'] == 'group':
-        search_results = models.Group.objects.filter(name__contains=_param['key_word'])
-    elif search_results is None:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '搜索是怎么可能运行到这里的？？？')
-    else:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '搜索type不存在')
+    return rS.success({
+        'count': count,
+        'list': data_list
+    })
 
+
+def search_group(request: HttpRequest):
+    """
+    搜索
+    :param request:
+    :return:
+    """
+    _param = validate_and_return(request, {
+        'key_word': '',
+        'page': 'int',
+        'size': 'int'
+    })
+
+    page = _param['page']
+    size = _param['size']
+
+    search_results = models.Group.objects.filter(name__contains=_param['key_word'])
+    count = search_results.count()
+    page_search_results = search_results[(page - 1) * size:page * size]
+
+    data_list = list()
+    for val in page_search_results:
+        var = val.to_list_dict()
+        data_list.append(var)
+
+    return rS.success({
+        'count': count,
+        'list': data_list
+    })
+
+
+def search_user(request: HttpRequest):
+    """
+    搜索
+    :param request:
+    :return:
+    """
+    _param = validate_and_return(request, {
+        'key_word': '',
+        'page': 'int',
+        'size': 'int'
+    })
+
+    page = _param['page']
+    size = _param['size']
+
+    search_results = models.User.objects.filter(nickname__contains=_param['key_word'])
     count = search_results.count()
     page_search_results = search_results[(page - 1) * size:page * size]
 
