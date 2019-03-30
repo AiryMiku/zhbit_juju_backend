@@ -258,4 +258,4 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
- apps/http/db/migrations/0001_initial.py
+apps/http/db/migrations/0001_initial.py
