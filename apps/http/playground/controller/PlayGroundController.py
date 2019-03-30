@@ -27,7 +27,7 @@ def show(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    activities = models.Activity.objects.all()
+    activities = models.Activity.objects.all().order_by('-id')
     count = activities.count()
     page_activities = activities[(page - 1) * size:page * size]
 

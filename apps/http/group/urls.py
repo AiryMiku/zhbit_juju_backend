@@ -28,5 +28,6 @@ urlpatterns = [
     path('baseActivityIndex/', QueryController.base_info_activity_index),
     # Interactive
     path('follow/', InteractiveController.follow),
-    path('disFollow/', InteractiveController.dis_follow)
+    path('disFollow/', InteractiveController.dis_follow),
+    path('isFollow/', InteractiveController.is_follow)
 ]

@@ -92,7 +92,7 @@ def is_follow(request: HttpRequest):
     if group is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该群组')
 
-    mapping = models.UserFollowGroupMapping.objects.get(user=user, group=group)
+    mapping = models.UserFollowGroupMapping.objects.filter(user=user, group=group)
 
     data = dict()
     data['is_follow'] = False
