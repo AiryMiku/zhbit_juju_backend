@@ -27,7 +27,7 @@ def search_activity(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    search_results = models.Activity.objects.filter(title__contains=_param['key_word'])
+    search_results = models.Activity.objects.filter(title__icontains=_param['key_word'])
     count = search_results.count()
     page_search_results = search_results[(page - 1) * size:page * size]
 
@@ -57,7 +57,7 @@ def search_group(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    search_results = models.Group.objects.filter(name__contains=_param['key_word'])
+    search_results = models.Group.objects.filter(name__icontains=_param['key_word'])
     count = search_results.count()
     page_search_results = search_results[(page - 1) * size:page * size]
 
@@ -87,7 +87,7 @@ def search_user(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    search_results = models.User.objects.filter(nickname__contains=_param['key_word'])
+    search_results = models.User.objects.filter(nickname__icontains=_param['key_word'])
     count = search_results.count()
     page_search_results = search_results[(page - 1) * size:page * size]
 
