@@ -44,22 +44,78 @@ def modify_password(request: HttpRequest):
     return rS.success()
 
 
-@request_check()
-def modify_information(request: HttpRequest):
-    _param = validate_and_return(request,{
-        'access_token': '',
-        'nickname': 'nullable',
-        'sex': 'nullable',
-        'birth': 'nullable',
-        'phone': 'nullable',
-        'status': 'nullable',
+# @login_check()
+def modify_nickname(request: HttpRequest):
+    _param = validate_and_return(request, {
+        'access_token':'',
+        'nickname':'',
     })
-
     user_id = UtilsController.get_id_by_token(_param['access_token'])
     if user_id == -1:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登陆')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登录')
+    obj = models.User.objects.get(pk=user_id)
+    obj.nickname=_param['nickname']
+    obj.save()
+    return rS.success()
 
-    models.User.objects.filter(pk=user_id).update(**_param)
+
+# @login_check()
+def modify_sex(request: HttpRequest):
+    _param = validate_and_return(request, {
+        'access_token':'',
+        'sex':'',
+    })
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if user_id == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登录')
+    obj = models.User.objects.get(pk=user_id)
+    obj.sex = _param['sex']
+    obj.save()
+    return rS.success()
+
+
+# @login_check()
+def modify_birth(request: HttpRequest):
+    _param = validate_and_return(request, {
+        'access_token':'',
+        'birth':'',
+    })
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if user_id == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登录')
+    obj = models.User.objects.get(pk=user_id)
+    obj.birth = _param['birth']
+    obj.save()
+    return rS.success()
+
+
+# @login_check()
+def modify_phone(request: HttpRequest):
+    _param = validate_and_return(request, {
+        'access_token':'',
+        'phone':'',
+    })
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if user_id == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登录')
+    obj = models.User.objects.get(pk=user_id)
+    obj.phone = _param['phone']
+    obj.save()
+    return rS.success()
+
+
+# @login_check()
+def modify_status(request: HttpRequest):
+    _param = validate_and_return(request, {
+        'access_token':'',
+        'status':'',
+    })
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if user_id == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登录')
+    obj = models.User.objects.get(pk=user_id)
+    obj.status = _param['status']
+    obj.save()
     return rS.success()
 
 

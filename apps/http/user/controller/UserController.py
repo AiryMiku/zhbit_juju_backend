@@ -30,7 +30,10 @@ def get_information(request: HttpRequest):
         break
     if obj is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'用户不存在')
-    return rS.success(obj.to_list_dict())
+    rs = obj.to_list_dict()
+    print(rs['birth'])
+    print(rs)
+    return rS.success(rs)
 
 
 # @login_check()
@@ -38,7 +41,7 @@ def get_information_by_id(request: HttpRequest):
     _param = validate_and_return(request, {
         'user_id': '',
     })
-
+    
     queryset = models.User.objects.filter(pk=_param['user_id'])
     obj = None
     for k in queryset:
