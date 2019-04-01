@@ -35,13 +35,10 @@ def get_information(request: HttpRequest):
 
 # @login_check()
 def get_information_by_id(request: HttpRequest):
-    _param = validate_and_return(request,{
-        'access_token': '',
+    _param = validate_and_return(request, {
         'user_id': '',
     })
-    a_id = UtilsController.get_id_by_token(_param['access_token'])
-    if a_id == -1:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登陆')
+
     queryset = models.User.objects.filter(pk=_param['user_id'])
     obj = None
     for k in queryset:

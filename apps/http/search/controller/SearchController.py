@@ -10,8 +10,10 @@ from django.http import HttpRequest
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
+from apps.http.decorator.LoginCheckDecorator import request_check
 
 
+@request_check()
 def search_activity(request: HttpRequest):
     """
     搜索
@@ -42,6 +44,7 @@ def search_activity(request: HttpRequest):
     })
 
 
+@request_check()
 def search_group(request: HttpRequest):
     """
     搜索
@@ -72,6 +75,7 @@ def search_group(request: HttpRequest):
     })
 
 
+@request_check()
 def search_user(request: HttpRequest):
     """
     搜索

@@ -80,6 +80,7 @@ def index_attend(request: HttpRequest):
     })
 
 
+@request_check()
 def info(request: HttpRequest):
     """
     返回活动的详细信息
@@ -102,6 +103,7 @@ def info(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '活动不存在')
 
 
+@request_check()
 def index_comment(request: HttpRequest):
     """
     活动留下的评论

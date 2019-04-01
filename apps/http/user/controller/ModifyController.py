@@ -44,15 +44,15 @@ def modify_password(request: HttpRequest):
     return rS.success()
 
 
-# @login_check()
+@request_check()
 def modify_information(request: HttpRequest):
     _param = validate_and_return(request,{
         'access_token': '',
-        'nickname': '',
-        'sex': '',
-        'birth': '',
-        'phone': '',
-        'status': '',
+        'nickname': 'nullable',
+        'sex': 'nullable',
+        'birth': 'nullable',
+        'phone': 'nullable',
+        'status': 'nullable',
     })
 
     user_id = UtilsController.get_id_by_token(_param['access_token'])

@@ -17,7 +17,7 @@ from apps.http.decorator.LoginCheckDecorator import request_check
 from apps.http.user.controller.UtilsController import get_id_by_token
 
 
-# @request_check()
+@request_check()
 def create(request: HttpRequest):
     """
     创建群组
@@ -63,7 +63,7 @@ def delete(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '删除群组失败')
 
 
-# @request_check()
+@request_check()
 def modify(request: HttpRequest):
     """
     修改群组
@@ -79,15 +79,6 @@ def modify(request: HttpRequest):
         'notice': 'nullable',
         'introduction': 'nullable'
     })
-
-    # for k, y in _param.items():
-    #     if y is None:
-    #         _param.pop(k)
-    #
-    for k, y in _param.items():
-        print(k + ' -> ' + y)
-    #
-    # return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, 'test in group modify')
 
     # 编辑公告
     if _param.get('notice', None) is not None:
