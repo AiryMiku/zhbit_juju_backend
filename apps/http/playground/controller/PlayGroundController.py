@@ -11,8 +11,10 @@ from django.http import HttpRequest
 from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
+from apps.http.decorator.LoginCheckDecorator import request_check
 
 
+@request_check()
 def show(request: HttpRequest):
     """
     展示活动广场的活动消息
@@ -27,7 +29,7 @@ def show(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    activities = models.Activity.objects.all()
+    activities = models.Activity.objects.all().order_by('-id')
     count = activities.count()
     page_activities = activities[(page - 1) * size:page * size]
 

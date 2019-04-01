@@ -41,6 +41,7 @@ def get_information_by_id(request: HttpRequest):
     _param = validate_and_return(request, {
         'user_id': '',
     })
+    
     queryset = models.User.objects.filter(pk=_param['user_id'])
     obj = None
     for k in queryset:

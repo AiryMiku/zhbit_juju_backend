@@ -13,7 +13,7 @@ from apps.Utils import ReturnResult as rS
 from apps.http.decorator.LoginCheckDecorator import request_check
 
 
-# @request_check()
+@request_check()
 def follow(request: HttpRequest):
     """
     关注
@@ -42,7 +42,7 @@ def follow(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '关注失败')
 
 
-# @request_check()
+@request_check()
 def dis_follow(request: HttpRequest):
     """
     取消关注
@@ -72,6 +72,7 @@ def dis_follow(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '取消关注失败')
 
 
+@request_check()
 def is_follow(request: HttpRequest):
     """
     是否关注
@@ -92,7 +93,7 @@ def is_follow(request: HttpRequest):
     if group is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该群组')
 
-    mapping = models.UserFollowGroupMapping.objects.get(user=user, group=group)
+    mapping = models.UserFollowGroupMapping.objects.filter(user=user, group=group)
 
     data = dict()
     data['is_follow'] = False

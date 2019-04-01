@@ -56,7 +56,6 @@ def index_follow(request: HttpRequest):
         'size': 'int'
     })
 
-    # 假装有个user_id
     user_id = _param['user_id']
 
     page = _param['page']
@@ -79,6 +78,7 @@ def index_follow(request: HttpRequest):
     })
 
 
+@request_check()
 def member_index(request: HttpRequest):
     """
     查看指定的群组人员
@@ -102,7 +102,7 @@ def member_index(request: HttpRequest):
 
     for val in page_members:
         var = dict()
-        var['user_id'] = val.user_id
+        var['id'] = val.user_id
         var['nickname'] = val.user.nickname
         data_list.append(var)
 
@@ -112,6 +112,7 @@ def member_index(request: HttpRequest):
     })
 
 
+@request_check()
 def base_info(request: HttpRequest):
     """
     群组页面的基础信息
@@ -129,6 +130,7 @@ def base_info(request: HttpRequest):
         return rS.success(display_data)
 
 
+@request_check()
 def base_info_activity_index(request: HttpRequest):
     """
     群组页面会展示的活动信息
