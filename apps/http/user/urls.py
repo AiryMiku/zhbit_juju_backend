@@ -33,4 +33,5 @@ urlpatterns = [
     path('modify_status/',ModifyController.modify_status),
     path('modify_birth/',ModifyController.modify_birth),
     path('modify_password/',ModifyController.modify_password),
+    path('get_enable_visited_list/',UserController.get_enable_visited_list)
 ]

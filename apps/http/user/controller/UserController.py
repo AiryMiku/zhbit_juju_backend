@@ -53,5 +53,28 @@ def get_information_by_id(request: HttpRequest):
     return rS.success(_)
 
 
+def get_enable_visited_list(request: HttpRequest):
+    _param = validate_and_return(request,{
+        'access_token':'',
+    })
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if user_id == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登陆')
+    obj = models.User.objects.get(pk=user_id)
+
+    temp = int(obj.enable_visited_list)
+    print(temp)
+    dict_data = {
+        'sex':0,
+        'birth':0,
+        'phone':0,
+        'status':0,
+    }
+    times = 3
+    for k in dict_data:
+        dict_data[k] = (temp >> times) & 1
+        times = times - 1
+    return rS.success(dict_data)
+
 
 

@@ -123,9 +123,9 @@ def modify_enable_visited_list(request: HttpRequest):
     _param = validate_and_return(request, {
         'access_token': '',
         'sex': '',
+        'birth': '',
         'phone': '',
         'status': '',
-        'birth': '',
     })
     user_id = UtilsController.get_id_by_token(_param['access_token'])
     if user_id == -1:
