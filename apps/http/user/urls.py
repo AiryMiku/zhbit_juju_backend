@@ -27,6 +27,10 @@ urlpatterns = [
     path('is_follow/',FollowController.is_follow),
     path('modify_enable_searched/',ModifyController.modify_enable_searched),
     path('modify_enable_visited_list/',ModifyController.modify_enable_visited_list),
-    path('modify_information/',ModifyController.modify_information),
+    path('modify_nickname/',ModifyController.modify_nickname),
+    path('modify_sex/',ModifyController.modify_sex),
+    path('modify_phone/',ModifyController.modify_phone),
+    path('modify_status/',ModifyController.modify_status),
+    path('modify_birth/',ModifyController.modify_birth),
     path('modify_password/',ModifyController.modify_password),
 ]
