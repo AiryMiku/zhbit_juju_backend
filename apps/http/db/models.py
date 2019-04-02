@@ -1,6 +1,6 @@
 from django.db import models
 from apps.Utils.DateTimeUtil import format_datetime_to_str
-
+from apps.Utils.DateTimeUtil import format_date_to_str
 # Create your models here.
 
 # 交流
@@ -16,32 +16,62 @@ class User(models.Model):
 
     # 拓展信息
     sex = models.IntegerField(default=-1)  # -1 = 未编辑 0 = 女 1 = 男
-    birth = models.DateTimeField(auto_now=True)  # 生日
+    birth = models.DateTimeField(default='1970-01-01')  # 生日
     phone = models.IntegerField(default=10010)  # 电话号码
-    status = models.CharField(max_length=100,default='')  # 签名
+    status = models.CharField(max_length=100, default='')  # 签名
 
     # 隐私
     enable_searched = models.BooleanField(default=True)  # 是否允许被搜索
     enable_visited_list = models.IntegerField(default=15)  # 允许被查看的拓展信息列表 二进制维护
 
     def to_list_dict(self):
-        dict_data={
+        dict_data = {
             'id':self.id,
             'nickname':self.nickname,
             'sex':self.sex,
-            'birth':format_datetime_to_str(self.birth),
+            'birth':format_date_to_str(self.birth),
             'phone': self.phone,
             'status': self.status,
         }
         return dict_data
 
 
+# 会话
+class Session(models.Model):
+    type = models.IntegerField(default=0)  # type = 0  为群组会话 否则是 个人会话
+    left_id = models.IntegerField(default=0)  # a用户的id    左右用户 a ID 比 b ID 小  方便查询与存储 如果是群组则是 group id
+    right_id = models.IntegerField(default=0)  # b用户的id
+    latest_message = models.ForeignKey("Message", on_delete=models.CASCADE)
+    latest_update_time = models.DateTimeField()  # 最后一次更新的时间
+
+    def to_list_dict(self):
+        dict_data = {
+            'type': self.type,
+            'left_id': self.left_id,
+            'right_id': self.right_id,
+            'content': self.latest_message.content,
+            'latest_update_time': self.latest_message.send_time,
+        }
+        return dict_data
+
+
 # 信息
 class Message(models.Model):
-    message_type = models.IntegerField(default=0)  # 0 = 群体信息  1 = 个人信息
+    type = models.IntegerField(default=0)  # 0 = 群体信息  1 = 个人信息
     from_id = models.IntegerField(default=0)  # 根据type的类型 id 为 群组id or 用户id
     to_id = models.IntegerField(default=0)  # 如果type = 0 则 to_id = 0 否则为对应用户的id
-    context = models.CharField(max_length=140)  # 信息文本
+    content = models.CharField(max_length=140)  # 信息文本
+    send_time = models.DateTimeField(auto_now_add=True)  # 发送时间
+
+    def to_list_dict(self):
+        dict_data = {
+            'type': self.type,
+            'from_id': self.from_id,
+            'to_id': self.to_id,
+            'content': self.content,
+            'send_time': self.send_time,
+        }
+        return dict_data
 
 
 # 关注关系 不论谁关注谁，每两个人只有一行数据
@@ -50,6 +80,7 @@ class FollowMapping(models.Model):
     user_right_id = models.IntegerField(default=0)  # 右用户的id
     left_to_right = models.BooleanField(default=False)  # 左是否关注右
     right_to_left = models.BooleanField(default=False)  # the same
+
     def to_list_dict(self):
         dict_data={
             'user_left_id': self.user_left_id,
@@ -57,6 +88,7 @@ class FollowMapping(models.Model):
             'left_to_right': self.left_to_right,
             'right_to_left': self.right_to_left,
         }
+        return dict_data
 
 
 # 通知推送消息

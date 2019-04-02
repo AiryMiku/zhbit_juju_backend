@@ -6,10 +6,10 @@
 
 from django.urls import path, include
 
-from apps.http.playground.controller import PlayGroundController
+from apps.http.message.controller import MessageController
 
 app_name = "message"
 
 urlpatterns = [
-    path('', )
+    path('create_message/', MessageController.create_message)
 ]
