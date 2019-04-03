@@ -10,7 +10,7 @@ from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 from apps.http.user.controller import UtilsController
 from apps.http.decorator.LoginCheckDecorator import request_check
-
+from apps.http.notification.controller import NotificationController
 
 # @login_check()
 def follow(request: HttpRequest):
@@ -43,6 +43,7 @@ def follow(request: HttpRequest):
     else:
         if p == 0:
             rs = models.FollowMapping.objects.create(user_left_id=a_id,user_right_id=b_id,left_to_right=True,right_to_left=False)
+            NotificationController.create_notification(1,b_id,str(a_id)+'关注了你')
             print(str(a_id) + '关注了' + str(b_id))
             if rs:
                 return rS.success()
@@ -52,6 +53,7 @@ def follow(request: HttpRequest):
         else:
             rs = models.FollowMapping.objects.create(user_left_id=a_id,user_right_id=b_id,left_to_right=False,right_to_left=True)
             print(str(b_id) + '关注了' + str(a_id))
+            NotificationController.create_notification(1, a_id, str(b_id) + '关注了你')
             if rs:
                 return rS.success()
             else:
