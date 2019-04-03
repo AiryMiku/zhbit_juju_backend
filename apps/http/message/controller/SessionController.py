@@ -18,8 +18,8 @@ from apps.http.decorator.LoginCheckDecorator import request_check
 #     })
 
 
-def create_session(type, left_id,right_id, msg_id, latest_update_time):
-    rs = models.Session.objects.create(type=type,
+def create_session(session_type, left_id,right_id, msg_id, latest_update_time):
+    rs = models.Session.objects.create(type=session_type,
                                        left_id=left_id,
                                        right_id=right_id,
                                        latest_message=msg_id,
@@ -51,3 +51,22 @@ def get_session_list(request: HttpRequest):
     _param = validate_and_return(request, {
         'access_token': '',
     })
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if user_id == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登录')
+    # obj = models.User.objects.get(pk=user_id)
+    session_list = models.Session.objects.all().order_by("-latest_update_time")
+    dict_data = {}
+    for k in session_list:
+        if k.type == 0:
+            queryset = models.UserFollowGroupMapping.objects.filter(user_id=user_id,group_id=k.left_id)
+            if queryset:
+                dict_data.setdefault(str(k.id))
+                dict_data[str(k.id)] = k.to_list_dict()
+        else:
+            if k.left_id == user_id | k.right_id == user_id:
+                dict_data.setdefault(str(k.id))
+                dict_data[str(k.id)] = k.to_list_dict()
+
+    return rS.success(dict_data)
+
