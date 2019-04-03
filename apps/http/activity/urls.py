@@ -27,5 +27,6 @@ urlpatterns = [
     path('like/', InteractiveController.like),
     path('dislike/', InteractiveController.dislike),
     path('follow/', InteractiveController.follow),
-    path('disFollow/', InteractiveController.dis_follow)
+    path('disFollow/', InteractiveController.dis_follow),
+    path('isFollow/', InteractiveController.is_follow)
 ]

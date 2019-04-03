@@ -159,8 +159,8 @@ def dis_follow(request: HttpRequest):
 
     _activity = models.Activity.objects.get(pk=_param['activity_id'])
     if _activity:
-        mapping = models.UserAttendActivityMapping.get(activity=_activity, user_id=_param['require_user_id'])
-        if mapping:
+        mapping = models.UserAttendActivityMapping.objects.filter(activity=_activity, user_id=_param['require_user_id'])
+        if mapping.count() != 0:
             mapping.delete()
             return rS.success()
         else:
@@ -182,7 +182,7 @@ def is_follow(request: HttpRequest):
     })
 
     user = models.User.objects.get(pk=_param['require_user_id'])
-    activity = models.Activity.objects.get(pk=_param['group_id'])
+    activity = models.Activity.objects.get(pk=_param['activity_id'])
 
     if user is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有找到用户')
@@ -190,7 +190,7 @@ def is_follow(request: HttpRequest):
     if activity is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '没有该活动')
 
-    mapping = models.UserAttendActivityMapping.objects.get(user=user, activity=activity)
+    mapping = models.UserAttendActivityMapping.objects.filter(user=user, activity=activity)
 
     data = dict()
     data['is_follow'] = False

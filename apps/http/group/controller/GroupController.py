@@ -25,11 +25,12 @@ def create(request: HttpRequest):
     """
     _param = validate_and_return(request, {
         'name': '',
-        'introduction': ''
+        'introduction': '',
+        'access_token': ''
     })
     _param['create_time'] = datetime.now()
 
-    _param['owner_user_id'] = 1
+    _param['owner_user_id'] = get_id_by_token(_param['access_token'])
     cur_group = models.Group.objects.create(**_param)
 
     if cur_group:
@@ -52,11 +53,9 @@ def delete(request: HttpRequest):
         'access_token': ''
     })
 
-    user_id = request.META.get('HTTP_TOKEN', None)
-    # permission check result
-    pr = 123
-    if pr:
-        cur_group = models.Group.objects.get(pk=_param['group_id'])
+    user_id = get_id_by_token(_param['access_token'])
+    cur_group = models.Group.objects.get(pk=_param['group_id'])
+    if user_id == cur_group.owner_user_id:
         cur_group.delete()
         return rS.success()
     else:
