@@ -17,7 +17,7 @@ class User(models.Model):
     access_token = models.CharField(max_length=100, default="0")  #
 
     # 拓展信息
-    sex = models.IntegerField(default=-1)  # -1 = 未编辑 0 = 女 1 = 男
+    sex = models.IntegerField(default=-1)  # -1 = 保密 0 = 女 1 = 男
     birth = models.DateTimeField(default='1970-01-01')  # 生日
     phone = models.IntegerField(default=10010)  # 电话号码
     status = models.CharField(max_length=100, default='')  # 签名
@@ -96,8 +96,15 @@ class FollowMapping(models.Model):
 
 # 通知推送消息
 class Notification(models.Model):
-    Notification_type = models.IntegerField(default=0)  # 推送消息的类型 0 = 群组成员变动 1 = 活动更改 2 = 被关注
-    Notification_text = models.CharField(max_length=200)  # 通知信息的文本
+    notification_type = models.IntegerField(default=0)  # 推送消息的类型 0 = 系统 1 = 给用户发 2 = 给群组的所有用户 3 = 给群组的管理员 4 = 给活动的所有参与人员
+    to_id = models.IntegerField(default=0)  # type = 0 用户id   否则是群组id     如果 id 为 0 表示给所有用户发
+    notification_content = models.CharField(max_length=200)  # 通知信息的文本
+    create_time = models.DateTimeField(auto_now_add=True)  # 创建的时间
+
+    def to_list_dict(self):
+        dict_data = {
+            'Notification_type'
+        }
 
 
 # 权限
@@ -149,7 +156,7 @@ class Group(models.Model):
 class UserFollowGroupMapping(models.Model):
     group = models.ForeignKey("Group", on_delete=models.CASCADE)
     user = models.ForeignKey("User", on_delete=models.CASCADE)  # user_id
-    role = models.IntegerField(default=0)  # user_role_in_group
+    role = models.IntegerField(default=0)  # user_role_in_group 1 = 群主 2 = 管理员
 
 
 # 活动
