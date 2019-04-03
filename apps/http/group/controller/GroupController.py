@@ -85,7 +85,6 @@ def modify(request: HttpRequest):
         # notification
         Log.debug('GroupController', 'notification send')
 
-    user_id = request.META.get('HTTP_TOKEN', None)
     # permission check result todo
     pr = True
     if pr:

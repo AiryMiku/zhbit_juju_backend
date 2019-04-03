@@ -12,9 +12,9 @@ from apps.http.user.controller import UtilsController
 from apps.http.decorator.LoginCheckDecorator import request_check
 
 
-# @login_check()
+@request_check()
 def modify_password(request: HttpRequest):
-    _param = validate_and_return(request,{
+    _param = validate_and_return(request, {
         'access_token': '',
         'ex_password': '',
         'new_password': '',
@@ -30,7 +30,7 @@ def modify_password(request: HttpRequest):
         obj = k
         break
     if obj is None:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,"该用户不存在")
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "该用户不存在")
     pwd = obj.password
     if _param['ex_password'] != pwd:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '密码错误')
@@ -44,21 +44,22 @@ def modify_password(request: HttpRequest):
     return rS.success()
 
 
-# @login_check()
+@request_check()
 def modify_information(request: HttpRequest):
     _param = validate_and_return(request, {
-        'access_token':'',
-        'nickname':'nullable',
-        'sex':'nullable',
-        'phone':'nullable',
-        'status':'nullable',
-        'birth':'nullable',
+        'access_token': '',
+        'nickname': 'nullable',
+        'sex': 'nullable',
+        'phone': 'nullable',
+        'status': 'nullable',
+        'birth': 'nullable',
     })
     user_id = UtilsController.get_id_by_token(_param['access_token'])
     if user_id == -1:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登录')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登录')
     _param.pop('access_token')
-    rs = models.User.objects.filter(pk=user_id).update(**_param)
+
+    return rS.success()
 
 
 def modify_enable_visited_list(request: HttpRequest):
@@ -91,7 +92,7 @@ def modify_enable_visited_list(request: HttpRequest):
         obj = k
         break
     if obj is None:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此用户不存在')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此用户不存在')
     obj.enable_visited_list = enable_visited_list
     obj.save()
     return rS.success()
@@ -116,11 +117,3 @@ def modify_enable_searched(request: HttpRequest):
     obj.enable_searched = _param['enable_searched']
     obj.save()
     return rS.success()
-
-
-
-
-
-
-
-

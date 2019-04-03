@@ -1,6 +1,8 @@
 from django.db import models
 from apps.Utils.DateTimeUtil import format_datetime_to_str
 from apps.Utils.DateTimeUtil import format_date_to_str
+
+
 # Create your models here.
 
 # 交流
@@ -26,10 +28,10 @@ class User(models.Model):
 
     def to_list_dict(self):
         dict_data = {
-            'id':self.id,
-            'nickname':self.nickname,
-            'sex':self.sex,
-            'birth':format_date_to_str(self.birth),
+            'id': self.id,
+            'nickname': self.nickname,
+            'sex': self.sex,
+            'birth': format_date_to_str(self.birth),
             'phone': self.phone,
             'status': self.status,
         }
@@ -82,7 +84,7 @@ class FollowMapping(models.Model):
     right_to_left = models.BooleanField(default=False)  # the same
 
     def to_list_dict(self):
-        dict_data={
+        dict_data = {
             'user_left_id': self.user_left_id,
             'user_right_id': self.user_right_id,
             'left_to_right': self.left_to_right,
@@ -107,12 +109,13 @@ class Permissions(models.Model):
     send_group_message = models.BooleanField(default=False)  # 发送信息给群体成员
 
     def to_list_dict(self):
-        dict_data={
-            'modify_group':self.modify_group,
-            'set_admin':self.set_admin,
-            'send_group_message':self.send_group_message,
+        dict_data = {
+            'modify_group': self.modify_group,
+            'set_admin': self.set_admin,
+            'send_group_message': self.send_group_message,
         }
         return dict_data
+
 
 # 交流 End
 

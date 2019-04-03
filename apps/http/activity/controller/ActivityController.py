@@ -86,14 +86,11 @@ def modify(request: HttpRequest):
         'start_time': 'nullable',
         'end_time': 'nullable',
     })
+    # check what change you can notify them todo
 
-    # permission check todo
-
-    # check what change you can notify them
-
-    _var = _param
-    _var.pop('activity_id')
-    models.Activity.objects.filter(pk=_param['activity_id']).update(**_var)
+    activity_id= _param['activity_id']
+    _param.pop('activity_id')
+    models.Activity.objects.filter(pk=activity_id).update(**_param)
 
     return rS.success()
 
