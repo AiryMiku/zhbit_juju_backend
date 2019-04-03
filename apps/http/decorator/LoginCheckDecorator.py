@@ -12,6 +12,7 @@ from django.http import HttpRequest
 from apps.Utils import ReturnResult as rS
 from apps.Utils.Log import Logger as Log
 from apps.Utils.validation.ParamValidation import ParamMissingException
+from django.db import models
 
 
 def request_check(*args, **kwargs):
@@ -42,9 +43,13 @@ def request_check(*args, **kwargs):
                 Log.error('param missing', e.msg)
                 return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, e.msg)
 
+            except models.ObjectDoesNotExist as e:
+                Log.critical('obj not exists', str(e))
+                return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '无法找到相关对象')
+
             except Exception as e:
                 Log.critical('deco login check', str(e))
-                return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "请刷新后重试~")
+                return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '请稍后刷新后重试~')
 
         return returned_wrapper
 
@@ -55,6 +60,6 @@ def _login_required(request: HttpRequest):
     user_id = request.META.get('HTTP_TOKEN', None)
     # 头部获取规则，系统自动加HTTP_前缀，postman直接写如上的🌰应该是TOKEN
     Log.debug('login_required', str(user_id))
-    if user_id is None:     # 判断None必须用is
+    if user_id is None:  # 判断None必须用is
         return True
     return False
