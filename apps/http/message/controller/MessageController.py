@@ -76,4 +76,7 @@ def get_message_list_by_session_id(request: HttpRequest):
             if a > b:
                 a,b = b,a
             if obj.left_id == a & obj.right_id == b:
+                dict_data.setdefault(str(k.id))
+                dict_data[str(k.id)] = k.to_list_dict()
 
+    return rS.success(dict_data)
