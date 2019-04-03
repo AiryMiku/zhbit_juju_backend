@@ -65,16 +65,42 @@ def get_enable_visited_list(request: HttpRequest):
     temp = int(obj.enable_visited_list)
     print(temp)
     dict_data = {
-        'sex':0,
         'birth':0,
         'phone':0,
         'status':0,
     }
-    times = 3
+    times = 2
     for k in dict_data:
         dict_data[k] = (temp >> times) & 1
         times = times - 1
     return rS.success(dict_data)
+
+
+def is_enable_searched(request: HttpRequest):
+    _param = validate_and_return(request,{
+        'access_token': '',
+    })
+
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if user_id == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登陆')
+
+    obj = models.User.objects.get(pk=user_id)
+
+    return rS.success({
+        'is_enable_searched': obj.enable_searched,
+    })
+
+
+def is_enable_searched_by_id(user_id):
+    obj = models.User.objects.filter(pk=user_id)
+    for k in obj:
+        return k.enable_searched
+    return False
+
+
+
+
 
 
 

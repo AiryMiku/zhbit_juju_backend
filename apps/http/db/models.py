@@ -24,7 +24,8 @@ class User(models.Model):
 
     # 隐私
     enable_searched = models.BooleanField(default=True)  # 是否允许被搜索
-    enable_visited_list = models.IntegerField(default=15)  # 允许被查看的拓展信息列表 二进制维护
+    # enable_visited_sex = models.BooleanField(default=True)  # 是否可以查看性别
+    enable_visited_list = models.IntegerField(default=7)  # 允许被查看的拓展信息列表 二进制维护
 
     def to_list_dict(self):
         dict_data = {
