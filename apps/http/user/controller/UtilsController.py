@@ -8,7 +8,7 @@ from apps.http.db import models
 
 
 def get_id_by_token(access_token):
-    obj = models.User.objects.get(access_token=access_token)
-    if obj is None:
-        return -1
-    return obj.id
+    query = models.User.objects.filter(access_token=access_token)
+    for k in query:
+        return k.id
+    return -1

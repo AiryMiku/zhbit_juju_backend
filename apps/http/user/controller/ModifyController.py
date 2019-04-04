@@ -48,8 +48,8 @@ def modify_password(request: HttpRequest):
 def modify_information(request: HttpRequest):
     _param = validate_and_return(request, {
         'access_token': '',
-        'nickname': 'nullable',
         'sex': 'nullable',
+        'nickname': 'nullable',
         'phone': 'nullable',
         'status': 'nullable',
         'birth': 'nullable',
@@ -58,14 +58,25 @@ def modify_information(request: HttpRequest):
     if user_id == -1:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登录')
     _param.pop('access_token')
-
+    models.User.objects.filter(pk=user_id).update(**_param)
     return rS.success()
+
+
+# def modify_sex_enable_visited(request: HttpRequest):
+#     _param = validate_and_return(request,{
+#         'access_token':'',
+#         'sex':'',
+#     })
+#     user_id = UtilsController.get_id_by_token(_param['access_token'])
+#     if user_id == -1:
+#         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此账号已在别处登录')
+#     _param.pop('access_token')
+#     models.User.objects.filter(id=user_id).update(**_param)
 
 
 def modify_enable_visited_list(request: HttpRequest):
     _param = validate_and_return(request, {
         'access_token': '',
-        'sex': '',
         'birth': '',
         'phone': '',
         'status': '',
@@ -76,7 +87,6 @@ def modify_enable_visited_list(request: HttpRequest):
 
     enable_visited_list = 0
     list_dict = {
-        'sex': _param['sex'],
         'birth': _param['birth'],
         'phone': _param['phone'],
         'status': _param['status'],
