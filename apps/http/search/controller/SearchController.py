@@ -91,7 +91,7 @@ def search_user(request: HttpRequest):
     page = _param['page']
     size = _param['size']
 
-    search_results = models.User.objects.filter(nickname__icontains=_param['key_word'])
+    search_results = models.User.objects.filter(nickname__icontains=_param['key_word'], enable_searched=1)
     count = search_results.count()
     page_search_results = search_results[(page - 1) * size:page * size]
 

@@ -31,6 +31,7 @@ def create(request: HttpRequest):
     _param['create_time'] = datetime.now()
 
     _param['owner_user_id'] = get_id_by_token(_param['access_token'])
+    _param.pop('access_token')
     cur_group = models.Group.objects.create(**_param)
 
     if cur_group:
