@@ -72,7 +72,7 @@ class Message(models.Model):
             'from_id': self.from_id,
             'to_id': self.to_id,
             'content': self.content,
-            'send_time': self.send_time,
+            'send_time': format_datetime_to_str(self.send_time),
         }
         return dict_data
 
