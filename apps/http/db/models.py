@@ -96,7 +96,9 @@ class FollowMapping(models.Model):
 
 # 通知推送消息
 class Notification(models.Model):
-    notification_type = models.IntegerField(default=0)  # 推送消息的类型 0 = 系统 1 = 给用户发 2 = 给群组的所有用户 3 = 给群组的管理员 4 = 给活动的所有参与人员
+    notification_type = models.IntegerField(default=0)
+    # 推送消息的类型 0 = 系统 1 = 给用户发 2 = 给群组的所有用户
+    # 3 = 给群组的管理员 4 = 给活动的所有参与人员
     to_id = models.IntegerField(default=0)  # type = 0 用户id   否则是群组id     如果 id 为 0 表示给所有用户发
     notification_content = models.CharField(max_length=200)  # 通知信息的文本
     create_time = models.DateTimeField(auto_now_add=True)  # 创建的时间
