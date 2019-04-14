@@ -122,6 +122,7 @@ def modify_enable_searched(request: HttpRequest):
     obj = None
     for k in queryset:
         obj = k
+        break
     if obj is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '用户不存在')
     obj.enable_searched = _param['enable_searched']

@@ -14,19 +14,23 @@ from apps.http.message.controller import SessionController
 
 
 def create_message(request: HttpRequest):
-    _param = validate_and_return(request,{
-        'access_token':'',
+    _param = validate_and_return(request, {
+        'access_token': '',
         'type': '',
-        'from_id':'',
-        'to_id':'',
-        'content':'',
+        'from_id': '',
+        'to_id': '',
+        'content': '',
     })
     user_id = UtilsController.get_id_by_token(_param['access_token'])
+    print(_param)
     _param.pop('access_token')
     if user_id == -1:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'该用户已在别处登录')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '该用户已在别处登录')
+    print(user_id)
     rs = models.Message.objects.create(**_param)
+    print(rs)
     msg_type = _param['type']
+    print(msg_type)
     if rs:
         if msg_type == 0:
             session_id = SessionController.is_session_exist(_param['from_id'], 0)
@@ -44,17 +48,17 @@ def create_message(request: HttpRequest):
             pass
         return rS.success()
     else:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'发送失败')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '发送失败')
 
 
 def get_message_list_by_session_id(request: HttpRequest):
     _param = validate_and_return(request,{
-        'access_token':'',
-        'session_id':'',
+        'access_token': '',
+        'session_id': '',
     })
     user_id = UtilsController.get_id_by_token(_param['access_token'])
     if user_id == -1:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'该用户已在别处登录')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '该用户已在别处登录')
     queryset = models.Session.objects.filter(pk=_param['session_id'])
     obj = None
     msg_list = models.Message.objects.all().order_by("-send_time")
@@ -63,7 +67,7 @@ def get_message_list_by_session_id(request: HttpRequest):
         obj = k
         break
     if obj is None:
-        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此会话不存在')
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此会话不存在')
     if obj.type == 0:
         for k in msg_list:
             if k.from_id == _param['session_id']:
