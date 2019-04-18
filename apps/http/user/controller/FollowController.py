@@ -48,23 +48,19 @@ def follow(request: HttpRequest):
                                                      left_to_right=True,
                                                      right_to_left=False)
             NotificationController.create_notification(1, b_id, str(a_id)+'关注了你')
-            print(str(a_id) + '关注了' + str(b_id))
             if rs:
                 return rS.success()
             else:
-                print("111")
                 return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'关注失败')
         else:
             rs = models.FollowMapping.objects.create(user_left_id=a_id,
                                                      user_right_id=b_id,
                                                      left_to_right=False,
                                                      right_to_left=True)
-            print(str(b_id) + '关注了' + str(a_id))
             NotificationController.create_notification(1, a_id, str(b_id) + '关注了你')
             if rs:
                 return rS.success()
             else:
-                print("222")
                 return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '关注失败')
 
 

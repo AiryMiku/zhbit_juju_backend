@@ -24,10 +24,6 @@ def create_session(session_type, left_id,right_id, msg_id, latest_update_time):
                                        right_id=right_id,
                                        latest_message=msg_id,
                                        latest_update_time=latest_update_time)
-    if rs:
-        print("success build session")
-    else:
-        print("fail to build session")
 
 
 def is_session_exist(l_id,r_id):
@@ -41,9 +37,10 @@ def is_session_exist(l_id,r_id):
     return obj.id
 
 
-def update_session_time(session_id, update_time):
+def update_session_time(session_id, message):
     obj = models.Session.objects.get(pk=session_id)
-    obj.latest_update_time = update_time
+    obj.latest_message = message
+    obj.latest_update_time = message.send_time
     obj.save()
 
 
@@ -56,17 +53,20 @@ def get_session_list(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登录')
     # obj = models.User.objects.get(pk=user_id)
     session_list = models.Session.objects.all().order_by("-latest_update_time")
-    dict_data = {}
+    count = 1
+    list_data = list()
     for k in session_list:
         if k.type == 0:
-            queryset = models.UserFollowGroupMapping.objects.filter(user_id=user_id,group_id=k.left_id)
+            queryset = models.UserFollowGroupMapping.objects.filter(user_id=user_id, group_id=k.left_id)
             if queryset:
-                dict_data.setdefault(str(k.id))
-                dict_data[str(k.id)] = k.to_list_dict()
+                dict_data = k.to_list_dict()
+                dict_data.setdefault("last_message")
+                dict_data['last_message'] = k.latest_message.content
+                dict_data.pop('last_message')
         else:
             if k.left_id == user_id | k.right_id == user_id:
                 dict_data.setdefault(str(k.id))
                 dict_data[str(k.id)] = k.to_list_dict()
 
-    return rS.success(dict_data)
+    return rS.success({"count":count,"list":list_data})
 
