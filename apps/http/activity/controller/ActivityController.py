@@ -11,6 +11,7 @@ from apps.http.db import models
 from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 from apps.http.decorator.LoginCheckDecorator import request_check
+from apps.http.user.controller import UtilsController
 
 
 @request_check()
@@ -57,14 +58,12 @@ def delete(request: HttpRequest):
     :return:
     """
     _param = validate_and_return(request, {
-        'activity_id': ''
+        'activity_id': '',
+        'access_token': ''
     })
-
-    # permission check todo
-
-    _activity = models.Activity.objects.get(pk=_param['activity_id'])
-
-    if _activity:
+    _activity = models.Activity.objects.filter(pk=_param['activity_id'])
+    _user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if _activity.count() != 0:
         _activity.delete()
         return rS.success()
     else:

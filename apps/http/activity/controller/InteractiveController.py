@@ -27,9 +27,7 @@ def leave_comment(request: HttpRequest):
         'content': ''
     })
 
-    # Todo 糖糖写get_id_by_token()
     user_id = _param['require_user_id']
-        # user_id request.META.get('HTTP_TOKEN', None)
     _comment_param = dict()
     _comment_param['user_id'] = user_id
     _comment_param['content'] = _param['content']
