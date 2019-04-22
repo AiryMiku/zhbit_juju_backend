@@ -11,19 +11,42 @@ from apps.Utils import ReturnResult as rS
 from apps.http.user.controller import UtilsController
 from apps.http.decorator.LoginCheckDecorator import request_check
 
-#
-# def create_session(request: HttpRequest):
-#     _param = validate_and_return(request, {
-#         'group_id': '',
-#     })
+
+def get_session(request: HttpRequest):
+    _param = validate_and_return(request, {
+        'access_token': '',
+        'type': '',
+        'left_id': '',  # type  = 0 left_id = group_id else = cur_user_id
+        'right_id': '',  # type = 0 right = 0 else = to_id
+    })
+    if UtilsController.get_id_by_token(_param['access_token']) == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "该用户已在别处登录")
+    l_id, r_id = _param['left_id'], _param['right_id']
+    int(l_id)
+    int(r_id)
+    session_type = _param['type']
+    if session_type == 1:
+        if l_id > r_id:
+            l_id, r_id = r_id, l_id
+    session_id = is_session_exist(l_id, r_id)
+    if session_id == -1:
+        session_id = create_session(session_type, l_id, r_id)
+        if session_id == -1:
+            return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "此会话不存在，请重新尝试")
+        else:
+            return rS.success({"session_id": session_id})
+    return rS.success({"session_id": session_id})
 
 
-def create_session(session_type, left_id,right_id, msg_id, latest_update_time):
+def create_session(session_type, left_id, right_id):
     rs = models.Session.objects.create(type=session_type,
                                        left_id=left_id,
                                        right_id=right_id,
-                                       latest_message=msg_id,
-                                       latest_update_time=latest_update_time)
+                                       )
+    if rs:
+        return rs.id
+    else:
+        return -1
 
 
 def is_session_exist(l_id,r_id):
@@ -39,8 +62,9 @@ def is_session_exist(l_id,r_id):
 
 def update_session_time(session_id, message):
     obj = models.Session.objects.get(pk=session_id)
-    obj.latest_message = message
+    obj.latest_message_content = message.content
     obj.latest_update_time = message.send_time
+    obj.is_active = True
     obj.save()
 
 
@@ -56,17 +80,26 @@ def get_session_list(request: HttpRequest):
     count = 1
     list_data = list()
     for k in session_list:
+        if not k.is_active:
+            continue
         if k.type == 0:
             queryset = models.UserFollowGroupMapping.objects.filter(user_id=user_id, group_id=k.left_id)
             if queryset:
                 dict_data = k.to_list_dict()
-                dict_data.setdefault("last_message")
-                dict_data['last_message'] = k.latest_message.content
-                dict_data.pop('last_message')
+                dict_data.setdefault("title")
+                dict_data['latest_update_time'] = str(dict_data['latest_update_time'])
+                dict_data['title'] = models.Group.objects.get(id=k.left_id).name
+                list_data.append(dict_data)
         else:
-            if k.left_id == user_id | k.right_id == user_id:
-                dict_data.setdefault(str(k.id))
-                dict_data[str(k.id)] = k.to_list_dict()
+            dict_data = k.to_list_dict()
+            dict_data.setdefault("title")
+            dict_data['latest_update_time'] = str(dict_data['latest_update_time'])
+            if k.left_id == user_id:
+                dict_data['title'] = models.User.objects.get(id=k.right_id).nickname
+                list_data.append(dict_data)
+            if k.right_id == user_id:
+                dict_data['title'] = models.User.objects.get(id=k.left_id).nickname
+                list_data.append(dict_data)
 
     return rS.success({"count":count,"list":list_data})
 
