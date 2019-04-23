@@ -12,6 +12,7 @@ from apps.http.user.controller import UtilsController
 from apps.http.decorator.LoginCheckDecorator import request_check
 from datetime import datetime
 
+
 def get_session(request: HttpRequest):
     _param = validate_and_return(request, {
         'access_token': '',
@@ -72,10 +73,16 @@ def update_session_time(session_id, message):
 def get_session_list(request: HttpRequest):
     _param = validate_and_return(request, {
         'access_token': '',
+        'page': 'int',
+        'size': 'int',
     })
     user_id = UtilsController.get_id_by_token(_param['access_token'])
     if user_id == -1:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登录')
+
+    page = _param['page']
+    size = _param['size']
+
     # obj = models.User.objects.get(pk=user_id)
     session_list = models.Session.objects.all().order_by("-latest_update_time")
     count = 0
@@ -105,5 +112,8 @@ def get_session_list(request: HttpRequest):
                 list_data.append(dict_data)
                 count += 1
 
-    return rS.success({"count":count,"list":list_data})
+    return rS.success({
+        "count": count,
+        "list": list_data[(page-1)*size:page*size]
+    })
 
