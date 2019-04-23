@@ -134,3 +134,51 @@ def is_follow(request: HttpRequest):
         return rS.success({
             'is_follow': obj.right_to_left,
         })
+
+
+@request_check()
+def get_follow_list(request: HttpRequest):
+    _param = validate_and_return(request,{
+        'access_token': '',
+        'page': 'int',
+        'size': 'int'
+    })
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if user_id == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "此账号已在别处登陆")
+
+    page = _param['page']
+    size = _param['size']
+
+    list_data = []
+    follow_mapping_list = models.FollowMapping.objects.filter(user_left_id=user_id)
+    count = follow_mapping_list.count()
+    for k in follow_mapping_list:
+        if not k.left_to_right:
+            continue
+        data = {
+            'id': k.user_right_id,
+            'nickname': models.User.objects.get(id=k.user_right_id).nickname,
+        }
+        list_data.append(data)
+
+    follow_mapping_list = models.FollowMapping.objects.filter(user_right_id=user_id)
+    count += follow_mapping_list.count()
+    for k in follow_mapping_list:
+        if not k.right_to_left:
+            continue
+        data = {
+            'id': k.user_left_id,
+            'nickname': models.User.objects.get(id=k.user_left_id).nickname,
+        }
+        list_data.append(data)
+    list_data.sort(key=sort_nickname)
+
+    return rS.success({
+        'count': count,
+        'list_data': list_data[(page-1)*size:page*size],
+    })
+
+
+def sort_nickname(self):
+    return self[1]
