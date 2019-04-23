@@ -26,6 +26,8 @@ def create_message(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '该用户已在别处登录')
     if len(_param['content']) == 0:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'内容为空，请输入信息再重新发送')
+    _param.setdefault("from_id")
+    _param["from_id"] = user_id
     rs = models.Message.objects.create(**_param)
     rs.save()
     SessionController.update_session_time(_param['session_id'], rs)
