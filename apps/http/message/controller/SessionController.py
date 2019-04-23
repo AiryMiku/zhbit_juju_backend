@@ -10,7 +10,7 @@ from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 from apps.http.user.controller import UtilsController
 from apps.http.decorator.LoginCheckDecorator import request_check
-
+from datetime import datetime
 
 def get_session(request: HttpRequest):
     _param = validate_and_return(request, {
@@ -42,6 +42,7 @@ def create_session(session_type, left_id, right_id):
     rs = models.Session.objects.create(type=session_type,
                                        left_id=left_id,
                                        right_id=right_id,
+                                       latest_update_time=datetime.now()
                                        )
     if rs:
         return rs.id
