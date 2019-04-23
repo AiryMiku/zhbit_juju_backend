@@ -78,7 +78,7 @@ def get_session_list(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'此账号已在别处登录')
     # obj = models.User.objects.get(pk=user_id)
     session_list = models.Session.objects.all().order_by("-latest_update_time")
-    count = 1
+    count = 0
     list_data = list()
     for k in session_list:
         if not k.is_active:
@@ -91,6 +91,7 @@ def get_session_list(request: HttpRequest):
                 dict_data['latest_update_time'] = str(dict_data['latest_update_time'])
                 dict_data['title'] = models.Group.objects.get(id=k.left_id).name
                 list_data.append(dict_data)
+                count += 1
         else:
             dict_data = k.to_list_dict()
             dict_data.setdefault("title")
@@ -98,9 +99,11 @@ def get_session_list(request: HttpRequest):
             if k.left_id == user_id:
                 dict_data['title'] = models.User.objects.get(id=k.right_id).nickname
                 list_data.append(dict_data)
+                count += 1
             if k.right_id == user_id:
                 dict_data['title'] = models.User.objects.get(id=k.left_id).nickname
                 list_data.append(dict_data)
+                count += 1
 
     return rS.success({"count":count,"list":list_data})
 

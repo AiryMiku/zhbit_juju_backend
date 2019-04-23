@@ -30,5 +30,6 @@ urlpatterns = [
     path('modify_enable_visited_list/', ModifyController.modify_enable_visited_list),
     path('modify_information/', ModifyController.modify_information),
     path('modify_password/', ModifyController.modify_password),
-    path('get_enable_visited_list/', UserController.get_enable_visited_list)
+    path('get_enable_visited_list/', UserController.get_enable_visited_list),
+    path('get_follow_list/', FollowController.get_follow_list)
 ]
