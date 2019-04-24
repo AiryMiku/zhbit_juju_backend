@@ -36,7 +36,11 @@ def get_session(request: HttpRequest):
             return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "此会话不存在，请重新尝试")
         else:
             return rS.success({"session_id": session_id})
-    return rS.success({"session_id": session_id})
+    return rS.success({
+        "session_id": session_id,
+        'type': _param['type'],
+        'title': models.User.objects.get(id=_param['right_id']).nickname,
+    })
 
 
 def create_session(session_type, left_id, right_id):
