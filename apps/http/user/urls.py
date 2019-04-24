@@ -26,7 +26,7 @@ urlpatterns = [
     path('dis_follow/', FollowController.dis_follow),
     path('is_follow/', FollowController.is_follow),
     path('modify_enable_searched/', ModifyController.modify_enable_searched),
-    path('is_enable_searched/',UserController.is_enable_searched),
+    path('is_enable_searched/', UserController.is_enable_searched),
     path('modify_enable_visited_list/', ModifyController.modify_enable_visited_list),
     path('modify_information/', ModifyController.modify_information),
     path('modify_password/', ModifyController.modify_password),

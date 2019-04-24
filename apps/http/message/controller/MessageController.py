@@ -78,5 +78,5 @@ def get_message_list_by_session_id(request: HttpRequest):
 
     return rS.success({
         'count': count,
-        'list_data': list_data,
+        'list': list_data,
     })
