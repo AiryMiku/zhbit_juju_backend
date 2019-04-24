@@ -44,33 +44,31 @@ class Session(models.Model):
     type = models.IntegerField(default=0)  # type = 0  为群组会话 否则是 个人会话
     left_id = models.IntegerField(default=0)  # a用户的id    左右用户 a ID 比 b ID 小  方便查询与存储 如果是群组则是 group id
     right_id = models.IntegerField(default=0)  # b用户的id
-    latest_message = models.ForeignKey("Message", on_delete=models.CASCADE)
-    latest_update_time = models.DateTimeField()  # 最后一次更新的时间
+    latest_message_content = models.CharField(max_length=100, default="")  # 最后一次信息的内容
+    latest_update_time = models.DateTimeField(default=None)  # 最后一次更新的时间
+    is_active = models.BooleanField(default=False)  # 是否被激活
 
     def to_list_dict(self):
         dict_data = {
             'type': self.type,
             'left_id': self.left_id,
             'right_id': self.right_id,
-            'content': self.latest_message.content,
-            'latest_update_time': self.latest_message.send_time,
+            'content': format_datetime_to_str(self.latest_update_time),
+            'latest_update_time': self.latest_update_time,
         }
         return dict_data
 
 
 # 信息
 class Message(models.Model):
-    type = models.IntegerField(default=0)  # 0 = 群体信息  1 = 个人信息
-    from_id = models.IntegerField(default=0)  # 根据type的类型 id 为 群组id or 用户id
-    to_id = models.IntegerField(default=0)  # 如果type = 0 则 to_id = 0 否则为对应用户的id
+    session = models.ForeignKey("Session", on_delete=models.CASCADE)  # 映射到会话
+    from_id = models.IntegerField(default=0)  # 发送人
     content = models.CharField(max_length=140)  # 信息文本
     send_time = models.DateTimeField(auto_now_add=True)  # 发送时间
 
     def to_list_dict(self):
         dict_data = {
-            'type': self.type,
-            'from_id': self.from_id,
-            'to_id': self.to_id,
+            'session_id': self.session.id,
             'content': self.content,
             'send_time': format_datetime_to_str(self.send_time),
         }
