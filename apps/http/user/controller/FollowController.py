@@ -172,7 +172,7 @@ def get_follow_list(request: HttpRequest):
             'nickname': models.User.objects.get(id=k.user_left_id).nickname,
         }
         list_data.append(data)
-    # list_data.sort(key=sort_nickname)
+    list_data.sort(key=lambda k: (k.get('nickname', '')))
 
     return rS.success({
         'count': count,
