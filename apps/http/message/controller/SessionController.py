@@ -37,7 +37,7 @@ def get_session(request: HttpRequest):
         else:
             return rS.success({"session_id": session_id})
     return rS.success({
-        "session_id": session_id,
+        "id": session_id,
         'type': _param['type'],
         'title': models.User.objects.get(id=_param['right_id']).nickname,
     })
