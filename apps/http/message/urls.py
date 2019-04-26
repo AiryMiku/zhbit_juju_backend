@@ -16,4 +16,5 @@ urlpatterns = [
     path('get_message_list_by_session_id/', MessageController.get_message_list_by_session_id),
     path('get_session/', SessionController.get_session),
     path('get_session_list/', SessionController.get_session_list),
+    path('get_session_by_id/',SessionController.get_session_by_id),
 ]

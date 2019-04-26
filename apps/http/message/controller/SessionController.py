@@ -13,6 +13,25 @@ from apps.http.decorator.LoginCheckDecorator import request_check
 from datetime import datetime
 
 
+def get_session_by_id(request: HttpRequest):
+    _param = validate_and_return(request,{
+        'access_token': '',
+        'session_id': '',
+    })
+    if UtilsController.get_id_by_token(_param['access_token']) == -1:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "该用户已在别处登录")
+    queryset = models.Session.objects.filter(pk=_param['session_id'])
+    obj = None
+    for k in queryset:
+        obj = k
+        break
+    if obj is None:
+        return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,"该会话不存在")
+    return rS.success({
+        'data': obj.to_list_dict(),
+    })
+
+
 def get_session(request: HttpRequest):
     _param = validate_and_return(request, {
         'access_token': '',

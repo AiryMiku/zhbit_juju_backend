@@ -54,8 +54,8 @@ class Session(models.Model):
             'type': self.type,
             'left_id': self.left_id,
             'right_id': self.right_id,
-            'content': format_datetime_to_str(self.latest_update_time),
-            'latest_update_time': self.latest_update_time,
+            'content': self.latest_message_content,
+            'latest_update_time': format_datetime_to_str(self.latest_update_time),
         }
         return dict_data
 
