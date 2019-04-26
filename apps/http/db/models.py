@@ -50,6 +50,7 @@ class Session(models.Model):
 
     def to_list_dict(self):
         dict_data = {
+            'id': self.id,
             'type': self.type,
             'left_id': self.left_id,
             'right_id': self.right_id,
@@ -68,7 +69,9 @@ class Message(models.Model):
 
     def to_list_dict(self):
         dict_data = {
+            'id': self.id,
             'session_id': self.session.id,
+            'from_id': self.from_id,
             'content': self.content,
             'send_time': format_datetime_to_str(self.send_time),
         }
