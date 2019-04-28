@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.http.db'
+    'apps.http.db',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +73,19 @@ TEMPLATES = [
         },
     },
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+        # 配置路由的路径
+        # "ROUTING": "exmchannels.routing.channel_routing",
+    },
+}
+
+ASGI_APPLICATION = 'zhbit_juju_backend.routing.application'
 
 WSGI_APPLICATION = 'zhbit_juju_backend.wsgi.application'
 
@@ -122,6 +136,20 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+        # 配置路由的路径
+        # "ROUTING": "exmchannels.routing.channel_routing",
+    },
+}
+
+ASGI_APPLICATION = 'exmchannels.routing.application'
 
 
 # Static files (CSS, JavaScript, Images)
