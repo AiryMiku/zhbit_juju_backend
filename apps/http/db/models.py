@@ -62,7 +62,7 @@ class Session(models.Model):
 
 # 信息
 class Message(models.Model):
-    session = models.ForeignKey("Session", on_delete=models.CASCADE)  # 映射到会话
+    session = models.ForeignKey("Session", on_delete=models.CASCADE, blank=True, null=True)  # 映射到会话
     from_id = models.IntegerField(default=0)  # 发送人
     content = models.CharField(max_length=140)  # 信息文本
     send_time = models.DateTimeField(auto_now_add=True)  # 发送时间
