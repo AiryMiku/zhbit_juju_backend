@@ -157,9 +157,8 @@ def remove_member(request: HttpRequest):
         'group_id': '',
         'require_user_id': ''
     })
-    user_id = request.META.get('HTTP_TOKEN', None)
-    # permission check result todo
-    pr = None
+
+    pr = True
     if pr:
         mapping = models.UserFollowGroupMapping.objects.get(group_id=_param['group_id'],
                                                             user_id=_param['require_user_id'])
