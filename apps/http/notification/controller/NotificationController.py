@@ -10,7 +10,7 @@ from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 from apps.http.decorator.LoginCheckDecorator import request_check
 from apps.http.user.controller import UtilsController
-
+from apps.channels.comsumers import push
 
 @request_check()
 def create_notification(notification_type, to_id, content):
