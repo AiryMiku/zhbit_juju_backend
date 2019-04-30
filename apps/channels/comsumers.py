@@ -23,7 +23,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         except:
             ChatConsumer.chats[self.group_name] = set([self])
 
-        # print(ChatConsumer.chats)
+        print(ChatConsumer.chats)
         # 创建连接时调用
         await self.accept()
 
@@ -54,7 +54,7 @@ class PushConsumer(AsyncConsumer):
             self.channel_name
         )
 
-        # print(PushConsumer.chats)
+        print(PushConsumer.chats)
 
     async def push_message(self, event):
         print(event)
@@ -72,3 +72,23 @@ def push(username, event):
             "event": event
         }
     )
+
+
+class TestConsumer(AsyncJsonWebsocketConsumer):
+
+    async def connect(self):
+
+        await self.accept()
+        print("Hello world")
+        await self.send("Hello world")
+
+    async def disconnect(self, code):
+
+        print("Bye")
+        await self.send("Bye")
+
+    async def receive(self, text_data=None, bytes_data=None, **kwargs):
+        print("receive -> "+text_data)
+
+    async def close(self, code=None):
+        print("close")
