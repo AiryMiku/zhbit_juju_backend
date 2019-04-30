@@ -10,12 +10,13 @@ from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 from apps.http.decorator.LoginCheckDecorator import request_check
 from apps.http.user.controller import UtilsController
+from apps.channels.comsumers import push
 
 
 @request_check()
 def create_notification(notification_type, to_id, content):
     # 推送消息的类型 0 = 系统 1 = 给用户发 2 = 给群组的所有用户 3 = 给群组的管理员 4 = 给参与活动的人
-    models.Notification.objects.create(notification_type=notification_type, to_id=to_id,notification_content=content)
+    models.Notification.objects.create(notification_type=notification_type, to_id=to_id, notification_content=content)
     # 推送消息给用户
 
 
@@ -49,7 +50,7 @@ def get_notification_list(request: HttpRequest):
 
         if k.notification_type == 3:
             if models.UserFollowGroupMapping.objects.filter(group=k.to_id, user=user_id):
-                if models.UserFollowGroupMapping.objects.get(group=k.to_id, user=user_id).role == 1 |     \
+                if models.UserFollowGroupMapping.objects.get(group=k.to_id, user=user_id).role == 1 | \
                         models.UserFollowGroupMapping.objects.get(group=k.to_id, user=user_id).role == 2:
                     dict_data.setdefault(str(k.id))
                     dict_data[str(k.id)] = k.to_list_dict()
