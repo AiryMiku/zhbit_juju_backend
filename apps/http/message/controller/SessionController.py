@@ -29,9 +29,9 @@ def get_session_by_id(request: HttpRequest):
     if obj is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,"该会话不存在")
     if obj.left_id == user_id:
-        session_name = models.User.objects.get(pk=obj.right_id)
+        session_name = models.User.objects.get(pk=obj.right_id).nickname
     else:
-        session_name = models.User.objects.get(pk=obj.left_id)
+        session_name = models.User.objects.get(pk=obj.left_id).nickname
     return rS.success({
         "id": obj.id,
         'type': obj.type,
