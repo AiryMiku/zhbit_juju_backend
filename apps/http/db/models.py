@@ -107,10 +107,10 @@ class Notification(models.Model):
     def to_list_dict(self):
         dict_data = {
             'id': self.id,
-            'Notification_type': self.notification_type,
+            'notification_type': self.notification_type,
             'to_id': self.to_id,
             'notification_content': self.notification_content,
-            'create_time': self.create_time,
+            'create_time': format_datetime_to_str(self.create_time),
         }
         return dict_data
 
