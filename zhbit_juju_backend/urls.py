@@ -23,6 +23,6 @@ urlpatterns = [
     path('playground/', include('apps.http.playground.urls')),
     path('search/', include('apps.http.search.urls')),
     path('user/', include('apps.http.user.urls')),
-    path('message/', include('apps.http.message.urls'))
+    path('message/', include('apps.http.message.urls')),
     path('notification/',include('apps.http.notification.urls'))
 ]
