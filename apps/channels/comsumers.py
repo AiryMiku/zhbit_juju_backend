@@ -41,7 +41,7 @@ class PushConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         await self.accept()
         print(self)
-        self.group_name = self.scope['url_route']['kwargs']['username']
+        self.group_name = self.scope['url_route']['kwargs']['id']
         print(self.group_name)
         await self.channel_layer.group_add(
             self.group_name,
@@ -64,17 +64,19 @@ class PushConsumer(AsyncJsonWebsocketConsumer):
         }))
 
 
-def push(username, event):
-    print(username, event)
+def push(id, event):
+    print(id, event)
     channel_layer = get_channel_layer()
     print(get_channel_layer())
     async_to_sync(channel_layer.group_send)(
-        username,
+        id,
         {
             "type": "push.message",
             "event": event
         }
     )
+
+
 class TestConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):

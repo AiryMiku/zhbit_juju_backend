@@ -18,7 +18,8 @@ def get_session_by_id(request: HttpRequest):
         'access_token': '',
         'session_id': '',
     })
-    if UtilsController.get_id_by_token(_param['access_token']) == -1:
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if user_id == -1:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "该用户已在别处登录")
     queryset = models.Session.objects.filter(pk=_param['session_id'])
     obj = None
@@ -27,8 +28,14 @@ def get_session_by_id(request: HttpRequest):
         break
     if obj is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,"该会话不存在")
+    if obj.left_id == user_id:
+        session_name = models.User.objects.get(pk=obj.right_id)
+    else:
+        session_name = models.User.objects.get(pk=obj.left_id)
     return rS.success({
-        'data': obj.to_list_dict(),
+        "id": obj.id,
+        'type': obj.type,
+        'title': session_name,
     })
 
 
