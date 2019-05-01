@@ -37,8 +37,10 @@ def follow(request: HttpRequest):
         print(obj.to_list_dict())
         if p == 0:
             obj.left_to_right = True
+            NotificationController.create_notification(1, b_id, str(a_id) + '关注了你')
         else:
             obj.right_to_left = True
+            NotificationController.create_notification(1, a_id, str(b_id) + '关注了你')
         obj.save()
         return rS.success()
     else:

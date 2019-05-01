@@ -5,9 +5,10 @@
 # @Software: PyCharm
 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from channels.consumer import AsyncConsumer
 from channels.layers import get_channel_layer
+from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
+import json
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
@@ -23,7 +24,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         except:
             ChatConsumer.chats[self.group_name] = set([self])
 
-        # print(ChatConsumer.chats)
+        print(ChatConsumer.chats)
         # 创建连接时调用
         await self.accept()
 
@@ -36,17 +37,17 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.close()
 
 
-class PushConsumer(AsyncConsumer):
-
+class PushConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
+        await self.accept()
+        print(self)
         self.group_name = self.scope['url_route']['kwargs']['username']
-
+        print(self.group_name)
         await self.channel_layer.group_add(
             self.group_name,
             self.channel_name
         )
-
-        await self.accept()
+        # await push('airy','heihei')
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -54,17 +55,19 @@ class PushConsumer(AsyncConsumer):
             self.channel_name
         )
 
-        # print(PushConsumer.chats)
+        print(PushConsumer.groups)
 
     async def push_message(self, event):
         print(event)
-        await self.send({
+        await self.send(text_data=json.dumps({
             "event": event['event']
-        })
+        }))
 
 
 def push(username, event):
+    print(username, event)
     channel_layer = get_channel_layer()
+    print(get_channel_layer())
     async_to_sync(channel_layer.group_send)(
         username,
         {
@@ -72,3 +75,28 @@ def push(username, event):
             "event": event
         }
     )
+class TestConsumer(AsyncJsonWebsocketConsumer):
+
+    async def connect(self):
+
+        await self.accept()
+        print("Hello world")
+        await self.send("Hello world")
+
+    async def disconnect(self, code):
+
+        print("Bye")
+        await self.send("Bye")
+
+    async def receive(self, text_data=None, bytes_data=None, **kwargs):
+        print("receive -> "+text_data)
+        message = text_data
+
+        await self.send_json(json.dumps({
+            'message': message
+        }))
+
+    async def close(self, code=None):
+        print("close")
+
+
