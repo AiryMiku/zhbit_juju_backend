@@ -15,7 +15,7 @@ from apps.Utils import ReturnResult as rS
 from apps.Utils.Log import Logger as Log
 from apps.http.decorator.LoginCheckDecorator import request_check
 from apps.http.user.controller.UtilsController import get_id_by_token
-
+from apps.http.notification.controller.NotificationController import create_notification
 
 @request_check()
 def create(request: HttpRequest):
@@ -82,6 +82,15 @@ def modify(request: HttpRequest):
 
     # 编辑公告
     if _param.get('notice', None) is not None:
+        # notification
+        create_notification()
+        Log.debug('GroupController', 'notification send')
+
+    if _param.get('name', None) is not None:
+        # notification
+        Log.debug('GroupController', 'notification send')
+
+    if _param.get('introduction', None) is not None:
         # notification
         Log.debug('GroupController', 'notification send')
 

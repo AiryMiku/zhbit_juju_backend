@@ -37,8 +37,10 @@ def follow(request: HttpRequest):
         print(obj.to_list_dict())
         if p == 0:
             obj.left_to_right = True
+            NotificationController.create_notification(1, b_id, models.User.objects.get(pk=a_id).nickname + '关注了你')
         else:
             obj.right_to_left = True
+            NotificationController.create_notification(1, a_id, models.User.objects.get(pk=b_id).nickname + '关注了你')
         obj.save()
         return rS.success()
     else:
@@ -47,7 +49,7 @@ def follow(request: HttpRequest):
                                                      user_right_id=b_id,
                                                      left_to_right=True,
                                                      right_to_left=False)
-            NotificationController.create_notification(1, b_id, str(a_id)+'关注了你')
+            NotificationController.create_notification(1, b_id, models.User.objects.get(pk=a_id).nickname + '关注了你')
             if rs:
                 return rS.success()
             else:
@@ -57,7 +59,7 @@ def follow(request: HttpRequest):
                                                      user_right_id=b_id,
                                                      left_to_right=False,
                                                      right_to_left=True)
-            NotificationController.create_notification(1, a_id, str(b_id) + '关注了你')
+            NotificationController.create_notification(1, a_id, models.User.objects.get(pk=b_id).nickname + '关注了你')
             if rs:
                 return rS.success()
             else:

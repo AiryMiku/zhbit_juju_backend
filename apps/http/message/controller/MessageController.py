@@ -61,9 +61,9 @@ def get_message_list_by_session_id(request: HttpRequest):
     if obj is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '此会话不存在')
     for k in msg_list:
-        print(k.session_id == int(_param['session_id']))
+        # print(k.session_id == int(_param['session_id']))
         if k.session_id == int(_param['session_id']):
-            print(k.to_list_dict())
+            # print(k.to_list_dict())
             data = k.to_list_dict()
             list_data.append(data)
             count += 1
