@@ -52,7 +52,7 @@ def get_message_list_by_session_id(request: HttpRequest):
     size = _param['size']
     queryset = models.Session.objects.filter(pk=_param['session_id'])
     obj = None
-    msg_list = models.Message.objects.all().order_by("-send_time")
+    msg_list = models.Message.objects.all().order_by("send_time")
     list_data = []
     count = 0
     for k in queryset:
