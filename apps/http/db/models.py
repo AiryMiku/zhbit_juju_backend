@@ -106,8 +106,13 @@ class Notification(models.Model):
 
     def to_list_dict(self):
         dict_data = {
-            'Notification_type'
+            'id': self.id,
+            'Notification_type': self.notification_type,
+            'to_id': self.to_id,
+            'notification_content': self.notification_content,
+            'create_time': self.create_time,
         }
+        return dict_data
 
 
 # 权限

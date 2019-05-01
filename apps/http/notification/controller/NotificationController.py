@@ -20,10 +20,13 @@ def create_notification(notification_type, to_id, content):
     # 推送消息给用户
     push(to_id, content)
 
+
 @request_check()
 def get_notification_list(request: HttpRequest):
     _param = validate_and_return(request, {
         'access_token': '',
+        'page': 'int',
+        'size': 'int',
     })
 
     user_id = UtilsController.get_id_by_token(_param['access_token'])
@@ -32,35 +35,41 @@ def get_notification_list(request: HttpRequest):
 
     queryset = models.Notification.objects.all().order_by("-create_time")
 
-    dict_data = {}
+    list_data = []
+    count = 0
     for k in queryset:
         if k.notification_type == 0:
-            dict_data.setdefault(str(k.id))
-            dict_data[str(k.id)] = k.to_list_dict()
+            list_data.append(k.to_list_dict())
+            count += 1
 
         if k.notification_type == 1:
             if k.to_id == user_id:
-                dict_data.setdefault(str(k.id))
-                dict_data[str(k.id)] = k.to_list_dict()
+                list_data.append(k.to_list_dict())
+                count += 1
 
         if k.notification_type == 2:
             if models.UserFollowGroupMapping.objects.filter(group=k.to_id, user=user_id):
-                dict_data.setdefault(str(k.id))
-                dict_data[str(k.id)] = k.to_list_dict()
+                list_data.append(k.to_list_dict())
+                count += 1
 
         if k.notification_type == 3:
             if models.UserFollowGroupMapping.objects.filter(group=k.to_id, user=user_id):
                 if models.UserFollowGroupMapping.objects.get(group=k.to_id, user=user_id).role == 1 | \
                         models.UserFollowGroupMapping.objects.get(group=k.to_id, user=user_id).role == 2:
-                    dict_data.setdefault(str(k.id))
-                    dict_data[str(k.id)] = k.to_list_dict()
+                    list_data.append(k.to_list_dict())
+                    count += 1
 
         if k.notification_type == 4:
             if models.UserAttendActivityMapping.objects.filter(user=user_id, activity=k.to_id):
-                dict_data.setdefault(str(k.id))
-                dict_data[str(k.id)] = k.to_list_dict()
+                list_data.append(k.to_list_dict())
+                count += 1
 
-    return rS.success(dict_data)
+    page = _param['page']
+    size = _param['size']
+    return rS.success({
+        'count': count,
+        'list': list_data[(page-1)*size:page*size],
+    })
 
 
 def push_all_notification(id):
