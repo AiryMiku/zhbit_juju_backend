@@ -11,14 +11,29 @@ from apps.Utils import ReturnResult as rS
 from apps.http.decorator.LoginCheckDecorator import request_check
 from apps.http.user.controller import UtilsController
 from apps.channels.comsumers import push
-
+from apps.Utils.DateTimeUtil import format_time_to_str
 
 @request_check()
 def create_notification(notification_type, to_id, content):
     # 推送消息的类型 0 = 系统 1 = 给用户发 2 = 给群组的所有用户 3 = 给群组的管理员 4 = 给参与活动的人
-    models.Notification.objects.create(notification_type=notification_type, to_id=to_id, notification_content=content)
+    obj = models.Notification.objects.create(notification_type=notification_type, to_id=to_id, notification_content=content)
     # 推送消息给用户
-    push(to_id, content)
+    if notification_type == 0:
+        arr = models.User.objects.all()
+        for k in arr:
+            push(k.id, format_time_to_str(obj.create_time) + " " + content)
+    if notification_type == 1:
+        push(to_id, format_time_to_str(obj.create_time) + " " + content)
+    if notification_type == 2:
+        arr = models.UserFollowGroupMapping.objects.filter(group=to_id)
+        for k in arr:
+            push(k.user_id, format_time_to_str(obj.create_time) + " " + content)
+    if notification_type == 3:
+        pass
+    if notification_type == 4:
+        arr = models.UserAttendActivityMapping.objects.filter(activity=to_id)
+        for k in arr:
+            push(k.user_id, format_time_to_str(obj.create_time) + " " + content)
 
 
 @request_check()
