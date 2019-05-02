@@ -29,7 +29,10 @@ def create_notification(notification_type, to_id, content):
         for k in arr:
             push(k.user_id, format_time_to_str(obj.create_time) + " " + content)
     if notification_type == 3:
-        pass
+        arr = models.UserFollowGroupMapping.objects.filter(group=to_id)
+        for k in arr:
+            if k.role == 0 | k.role == 1:
+                push(k.user_id, format_time_to_str(obj.create_time) + " " + content)
     if notification_type == 4:
         arr = models.UserAttendActivityMapping.objects.filter(activity=to_id)
         for k in arr:
