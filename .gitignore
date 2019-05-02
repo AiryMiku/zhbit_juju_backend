@@ -260,3 +260,4 @@ Temporary Items
 
 
 /apps/http/db/migrations/0001_initial.py
+/zhbit_juju_backend/settings.py
