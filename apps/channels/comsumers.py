@@ -64,7 +64,7 @@ class PushConsumer(AsyncJsonWebsocketConsumer):
         }))
 
 
-def push(id, event):
+def push(id: str, event: str):
     print(id, event)
     channel_layer = get_channel_layer()
     print(get_channel_layer())
