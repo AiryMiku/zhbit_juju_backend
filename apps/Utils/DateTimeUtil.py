@@ -15,3 +15,7 @@ def format_datetime_to_str(dt: datetime):
 
 def format_date_to_str(dt: datetime):
     return dt.strftime("%Y-%m-%d")
+
+
+def format_time_to_str(dt: datetime):
+    return dt.strftime("%H:%M")

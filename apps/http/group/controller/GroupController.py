@@ -80,24 +80,28 @@ def modify(request: HttpRequest):
         'introduction': 'nullable'
     })
 
+    group_id = _param['group_id']
+
     # 编辑公告
     if _param.get('notice', None) is not None:
         # notification
-        create_notification()
+        create_notification(2, group_id, models.Group.objects.get(pk=group_id).notice + '更改为' + _param['notice'])
         Log.debug('GroupController', 'notification send')
 
     if _param.get('name', None) is not None:
         # notification
+        create_notification(2, group_id, models.Group.objects.get(pk=group_id).name + '更改为' + _param['name'])
         Log.debug('GroupController', 'notification send')
 
     if _param.get('introduction', None) is not None:
         # notification
+        create_notification(2, group_id, models.Group.objects.get(pk=group_id).introduction + '更改为' + \
+                            _param['introduction'])
         Log.debug('GroupController', 'notification send')
 
     # permission check result todo
     pr = True
     if pr:
-        group_id = _param['group_id']
         _param.pop('group_id')
         models.Group.objects.filter(pk=group_id).update(**_param)
         return rS.success()
