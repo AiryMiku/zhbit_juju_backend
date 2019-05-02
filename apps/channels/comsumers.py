@@ -69,7 +69,7 @@ def push(id: str, event: str):
     channel_layer = get_channel_layer()
     print(get_channel_layer())
     async_to_sync(channel_layer.group_send)(
-        id,
+        str(id),
         {
             "type": "push.message",
             "event": event

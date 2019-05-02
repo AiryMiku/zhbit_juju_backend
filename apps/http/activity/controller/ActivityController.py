@@ -12,7 +12,7 @@ from apps.Utils.validation.ParamValidation import validate_and_return
 from apps.Utils import ReturnResult as rS
 from apps.http.decorator.LoginCheckDecorator import request_check
 from apps.http.user.controller import UtilsController
-
+from apps.http.notification.controller.NotificationController import create_notification
 
 @request_check()
 def create(request: HttpRequest):
@@ -86,8 +86,22 @@ def modify(request: HttpRequest):
         'end_time': 'nullable',
     })
     # check what change you can notify them todo
-
-    activity_id= _param['activity_id']
+    activity_id = _param['activity_id']
+    if _param.get('title', None) is not None:
+        create_notification(4, activity_id, models.Activity.objects.get(pk=activity_id).title + ' 更改为 ' + \
+                            _param['title'])
+    if _param.get('content', None) is not None:
+        create_notification(4, activity_id, models.Activity.objects.get(pk=activity_id).content + ' 更改为 ' + \
+                            _param['content'])
+    if _param.get('place', None) is not None:
+        create_notification(4, activity_id, models.Activity.objects.get(pk=activity_id).place + ' 更改为 ' + \
+                            _param['place'])
+    if _param.get('start_time', None) is not None:
+        create_notification(4, activity_id, models.Activity.objects.get(pk=activity_id).start_time + ' 更改为 ' + \
+                            _param['start_time'])
+    if _param.get('end_time', None) is not None:
+        create_notification(4, activity_id, models.Activity.objects.get(pk=activity_id).end_time + ' 更改为 ' + \
+                            _param['end_time'])
     _param.pop('activity_id')
     models.Activity.objects.filter(pk=activity_id).update(**_param)
 

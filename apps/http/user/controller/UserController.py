@@ -14,6 +14,17 @@ from apps.http.decorator.LoginCheckDecorator import request_check
 from apps.http.user.controller import UtilsController
 
 
+def check_token(request: HttpRequest):
+    _param = validate_and_return(request, {
+        'access_token': '',
+    })
+    user_id = UtilsController.get_id_by_token(_param['access_token'])
+    if user_id == -1:
+        return rS.fail()
+    else:
+        return rS.success()
+
+
 # @login_check()
 def get_information(request: HttpRequest):
     _param = validate_and_return(request, {
