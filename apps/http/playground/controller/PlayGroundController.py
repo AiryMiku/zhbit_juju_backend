@@ -38,7 +38,7 @@ def show(request: HttpRequest):
         var = val.to_list_dict()
         data_list.append(var)
 
-    sorted_list = sorted(data_list, key=lambda x: x['like_number'], reverse=False)  # 降序
+    sorted_list = sorted(data_list, key=lambda x: x['like_number'], reverse=True)  # 降序
 
     return rS.success({
         'count': count,
