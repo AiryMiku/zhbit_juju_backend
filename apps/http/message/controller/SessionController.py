@@ -28,10 +28,13 @@ def get_session_by_id(request: HttpRequest):
         break
     if obj is None:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,"该会话不存在")
-    if obj.left_id == user_id:
-        session_name = models.User.objects.get(pk=obj.right_id).nickname
+    if models.Session.objects.get(pk=obj.id).type == 0:
+        session_name = models.Group.objects.get(pk=models.Session.objects.get(pk=obj.id).left_id).name
     else:
-        session_name = models.User.objects.get(pk=obj.left_id).nickname
+        if obj.left_id == user_id:
+            session_name = models.User.objects.get(pk=obj.right_id).nickname
+        else:
+            session_name = models.User.objects.get(pk=obj.left_id).nickname
     return rS.success({
         "id": obj.id,
         'type': obj.type,
@@ -51,7 +54,7 @@ def get_session(request: HttpRequest):
     l_id, r_id = _param['left_id'], _param['right_id']
     int(l_id)
     int(r_id)
-    session_type = _param['type']
+    session_type = int(_param['type'])
     if session_type == 1:
         if l_id > r_id:
             l_id, r_id = r_id, l_id
@@ -62,10 +65,15 @@ def get_session(request: HttpRequest):
             return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "此会话不存在，请重新尝试")
         else:
             return rS.success({"session_id": session_id})
+    else:
+        if session_type == 0:
+            session_name = models.Group.objects.get(pk=_param['left_id']).name
+        else:
+            session_name = models.User.objects.get(id=_param['right_id']).nickname
     return rS.success({
         "id": session_id,
         'type': _param['type'],
-        'title': models.User.objects.get(id=_param['right_id']).nickname,
+        'title': session_name,
     })
 
 

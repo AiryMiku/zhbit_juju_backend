@@ -13,6 +13,7 @@ from apps.http.user.controller import UtilsController
 from apps.channels.comsumers import push
 from apps.Utils.DateTimeUtil import format_time_to_str
 
+
 @request_check()
 def create_notification(notification_type, to_id, content):
     # 推送消息的类型 0 = 系统 1 = 给用户发 2 = 给群组的所有用户 3 = 给群组的管理员 4 = 给参与活动的人
