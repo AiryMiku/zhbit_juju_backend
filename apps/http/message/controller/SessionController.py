@@ -69,7 +69,7 @@ def get_session(request: HttpRequest):
             else:
                 session_name = models.User.objects.get(id=_param['right_id']).nickname
             return rS.success({
-                "session_id": session_id,
+                "id": session_id,
                 "type": models.Session.objects.get(pk=session_id).type,
                 "title": session_name,
             })
@@ -136,6 +136,7 @@ def get_session_list(request: HttpRequest):
     for k in session_list:
         if not k.is_active:
             continue
+        print(k.id)
         if k.type == 0:
             queryset = models.UserFollowGroupMapping.objects.filter(user_id=user_id, group_id=k.left_id)
             if queryset:
