@@ -64,7 +64,15 @@ def get_session(request: HttpRequest):
         if session_id == -1:
             return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "此会话不存在，请重新尝试")
         else:
-            return rS.success({"session_id": session_id})
+            if session_type == 0:
+                session_name = models.Group.objects.get(pk=_param['left_id']).name
+            else:
+                session_name = models.User.objects.get(id=_param['right_id']).nickname
+            return rS.success({
+                "session_id": session_id,
+                "type": models.Session.objects.get(pk=session_id).type,
+                "title": session_name,
+            })
     else:
         if session_type == 0:
             session_name = models.Group.objects.get(pk=_param['left_id']).name
