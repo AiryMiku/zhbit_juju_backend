@@ -11,9 +11,8 @@ from apps.Utils import ReturnResult as rS
 from apps.http.user.controller import UtilsController
 from apps.http.decorator.LoginCheckDecorator import request_check
 from apps.http.message.controller import SessionController
+from apps.http.notification.controller.NotificationController import create_notification
 
-
-@request_check()
 def create_message(request: HttpRequest):
     _param = validate_and_return(request, {
         'access_token': '',
@@ -28,10 +27,19 @@ def create_message(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'内容为空，请输入信息再重新发送')
     _param.setdefault("from_id")
     _param["from_id"] = user_id
+
     rs = models.Message.objects.create(**_param)
     rs.save()
     SessionController.update_session_time(_param['session_id'], rs)
     if rs:
+        if models.Session.objects.get(pk=_param['session_id']).type == 0:
+            create_notification(2, models.Session.objects.get(pk=_param['session_id']).left_id, \
+                                "来自" + \
+                                models.Group.objects.get(\
+                                    pk=models.Session.objects.get(\
+                                        pk=_param['session_id']).left_id).name\
+                                + "的消息"+models.User.objects.get(pk=user_id).nickname \
+                                         + " @全体成员 "+ _param['content'])
         return rS.success()
     else:
         return rS.fail((rS.ReturnResult.UNKNOWN_ERROR, "发送失败"))
@@ -44,6 +52,7 @@ def get_message_list_by_session_id(request: HttpRequest):
         'page': 'int',
         'size': 'int',
     })
+    print(_param['session_id'])
     user_id = UtilsController.get_id_by_token(_param['access_token'])
     if user_id == -1:
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, '该用户已在别处登录')
