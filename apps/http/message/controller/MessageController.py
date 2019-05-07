@@ -27,7 +27,14 @@ def create_message(request: HttpRequest):
         return rS.fail(rS.ReturnResult.UNKNOWN_ERROR,'内容为空，请输入信息再重新发送')
     _param.setdefault("from_id")
     _param["from_id"] = user_id
-
+    if models.Session.objects.get(pk=_param['session_id']).type == 0:
+        perminssion_check = models.UserFollowGroupMapping.objects.all();
+        for k in perminssion_check:
+            print(k.user_id)
+            print(k.group_id)
+            if k.user_id == user_id | k.group_id == models.Session.objects.get(pk=_param['session_id']).left_id:
+                if k.role != 1 | k.role != 2:
+                    return rS.fail(rS.ReturnResult.UNKNOWN_ERROR, "没有权限发信息")
     rs = models.Message.objects.create(**_param)
     rs.save()
     SessionController.update_session_time(_param['session_id'], rs)
