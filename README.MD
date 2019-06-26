@@ -20,6 +20,23 @@ Mysql
  
  DB schema migration - 
  ```shell
+   python manage.py makemigrations
+   
+       - Create model Activity
+    - Create model Comment
+    - Create model FollowMapping
+    - Create model Group
+    - Create model Message
+    - Create model Notification
+    - Create model Permissions
+    - Create model User
+    - Create model UserFollowGroupMapping
+    - Create model UserAttendActivityMapping
+    - Create model ActivityLikeMapping
+    - Create model ActivityBelongGroupMapping
+    - Create model ActivityBelongComment
+    
+    
    python manage.py migrate
    python manage.py runserver
  ```
