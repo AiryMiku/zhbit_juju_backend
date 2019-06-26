@@ -1,6 +1,6 @@
 # zhbit_juju_backend - python3
 
-Django
+Django / miniconda - https://docs.conda.io/en/latest/miniconda.html
 ```shell
     conda create -n juju
     conda activate juju
