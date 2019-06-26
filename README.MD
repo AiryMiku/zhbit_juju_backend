@@ -5,6 +5,8 @@ Django
     conda create -n juju
     conda activate juju
     conda install -c anaconda django
+    pip install mysqlpython
+    pip install sqlparse
 ```
 
 
@@ -14,6 +16,16 @@ Mysql
     CREATE USER 'juju'@'localhost' IDENTIFIED BY '1234';
     GRANT ALL PRIVILEGES ON `juju`.* to 'juju'@'localhost';
  ```
+ 
+ 
+ DB schema migration - 
+ ```shell
+   python manage.py migrate
+   python manage.py runserver
+ ```
+ 
+ 
+
     
 # 约定
 ### 分支
