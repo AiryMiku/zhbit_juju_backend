@@ -1,5 +1,50 @@
-# zhbit_juju_backend
+# zhbit_juju_backend - python3
 
+Django / miniconda - https://docs.conda.io/en/latest/miniconda.html
+```shell
+    conda create -n juju
+    conda activate juju
+    conda install -c anaconda django
+    pip install mysqlpython
+    pip install sqlparse
+    pip install channels
+```
+
+
+Mysql 
+```sql
+    CREATE DATABASE 'juju';
+    CREATE USER 'juju'@'localhost' IDENTIFIED BY '1234';
+    GRANT ALL PRIVILEGES ON `juju`.* to 'juju'@'localhost';
+ ```
+ 
+ 
+ DB schema migration - 
+ ```shell
+   python manage.py makemigrations
+   
+       - Create model Activity
+    - Create model Comment
+    - Create model FollowMapping
+    - Create model Group
+    - Create model Message
+    - Create model Notification
+    - Create model Permissions
+    - Create model User
+    - Create model UserFollowGroupMapping
+    - Create model UserAttendActivityMapping
+    - Create model ActivityLikeMapping
+    - Create model ActivityBelongGroupMapping
+    - Create model ActivityBelongComment
+    
+    
+   python manage.py migrate
+   python manage.py runserver
+ ```
+ 
+ 
+
+    
 # 约定
 ### 分支
 * master
