@@ -1,5 +1,14 @@
-# zhbit_juju_backend
+# zhbit_juju_backend - python3
 
+Django
+```shell
+    conda create -n juju
+    conda activate juju
+    conda install -c anaconda django
+```
+
+
+Mysql 
 ```sql
     CREATE DATABASE 'juju';
     CREATE USER 'juju'@'localhost' IDENTIFIED BY '1234';
