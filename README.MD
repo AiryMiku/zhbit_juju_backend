@@ -1,5 +1,11 @@
 # zhbit_juju_backend
 
+```sql
+    CREATE DATABASE 'juju';
+    CREATE USER 'juju'@'localhost' IDENTIFIED BY '1234';
+    GRANT ALL PRIVILEGES ON `juju`.* to 'juju'@'localhost';
+ ```
+    
 # 约定
 ### 分支
 * master
