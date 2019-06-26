@@ -7,6 +7,7 @@ Django / miniconda - https://docs.conda.io/en/latest/miniconda.html
     conda install -c anaconda django
     pip install mysqlpython
     pip install sqlparse
+    pip install channels
 ```
 
 
