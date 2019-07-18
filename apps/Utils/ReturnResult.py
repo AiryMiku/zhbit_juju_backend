@@ -33,7 +33,7 @@ def success(data=None, msg='success'):
         'data': data
     }
     # Log.info(response, 'response')
-    return HttpResponse(json.dumps(response), content_type="application/json")
+    return HttpResponse(json.dumps(response, ensure_ascii=False), content_type="application/json", charset='utf-8')
 
 
 def fail(return_value, msg=''):
@@ -42,4 +42,4 @@ def fail(return_value, msg=''):
         'msg': msg
     }
     # Log.info(response, 'response')
-    return HttpResponse(json.dumps(response), content_type="application/json")
+    return HttpResponse(json.dumps(response, ensure_ascii=False), content_type="application/json", charset='utf-8')
